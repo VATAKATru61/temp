@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}FastSafeNet{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', path='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/button.css">
+    <link rel="stylesheet" href="/static/css/table.css">
+    <link rel="stylesheet" href="/static/css/modals_forms.css">
+    {% block extra_css %}
+    <style>
+
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-header">
+                    <h1>FastSafeNet</h1>
+                    <p class="sidebar-subtitle">Админ-панель для управления ботом</p>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="sidebar-section">
+                        <p class="sidebar-section-title">Обзор</p>
+                        <a href="/dashboard" class="btn btn-sm">Статистика</a>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <p class="sidebar-section-title">Управление</p>
+                        <a href="/users" class="btn btn-sm btn-secondary">Пользователи</a>
+                        <a href="/tariffs" class="btn btn-sm btn-secondary">Тарифы</a>
+                        <a href="/servers" class="btn btn-sm btn-secondary">Серверы</a>
+                        <a href="/keys" class="btn btn-sm btn-secondary">Подписки</a>
+                        <a href="/coupons" class="btn btn-sm btn-secondary">Купоны</a>
+                        <a href="/payments" class="btn btn-sm btn-secondary">Оплаты</a>
+                        <a href="/referrals" class="btn btn-sm btn-secondary">Рефералы</a>
+                        <a href="/gifts" class="btn btn-sm btn-secondary">Подарки</a>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="/logout" class="btn btn-sm btn-danger">Выйти</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% block header %}{% endblock %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

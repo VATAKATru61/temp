@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Оплаты | SoloBot WEB{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/table.css">
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h1>Оплаты</h1>
+    <p class="page-subtitle">Всего: {{ payments|length }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div class="search-container">
+        <input type="text" id="searchPaymentInput" placeholder="🔍 Поиск по ID, tg_id, кассе...">
+    </div>
+    <table class="data-table" id="paymentsTable">
+        <thead>
+            <tr>
+                <th>ID оплаты</th>
+                <th>Telegram ID</th>
+                <th>Сумма</th>
+                <th>Касса</th>
+                <th>Дата</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.tg_id }}</td>
+                <td>{{ p.amount }}</td>
+                <td>{{ p.provider }}</td>
+                <td>{{ p.created_at }}</td>
+                <td>{{ p.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+document.getElementById('searchPaymentInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('#paymentsTable tbody tr').forEach(row => {
+    const cells = Array.from(row.cells);
+    row.style.display = cells.some(td => td.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

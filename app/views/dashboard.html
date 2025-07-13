@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Панель | FastSafeNet WEB{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <h1>Статистика</h1>
+        <p class="page-subtitle">Админ-панель FastSafeNet!</p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {# Пример кнопки, если появится — уже в нужном стиле #}
+    {# <a href="/some-action" class="btn">Добавить</a> #}
+
+    <div class="dashboard-cards">
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">ПОДПИСКИ</div>
+            <div class="card-metric">
+                <span class="metric-label">Сгенерировано:</span>
+                <span class="metric-value">{{ stats.total_subs }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Истекших:</span>
+                <span class="metric-value">{{ stats.expired_subs }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Истекающих:</span>
+                <span class="metric-value">{{ stats.expiring_subs or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Создано сегодня:</span>
+                <span class="metric-value">{{ stats.subs_today or 0 }}</span>
+            </div>
+            <a href="/keys" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">КЛИЕНТЫ</div>
+            <div class="card-metric">
+                <span class="metric-label">Всего:</span>
+                <span class="metric-value">{{ stats.total_users }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Активных:</span>
+                <span class="metric-value">{{ stats.active_users or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Без подписки:</span>
+                <span class="metric-value">{{ stats.users_without_subs or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Новые сегодня:</span>
+                <span class="metric-value">{{ stats.users_today or 0 }}</span>
+            </div>
+            <a href="/users" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">ОПЛАТЫ</div>
+            <div class="card-metric">
+                <span class="metric-label">Всего:</span>
+                <span class="metric-value">{{ stats.total_payments }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Общая сумма:</span>
+                <span class="metric-value">{{ stats.payments_sum or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">За сегодня:</span>
+                <span class="metric-value">{{ stats.payments_today or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Сумма за сегодня:</span>
+                <span class="metric-value">{{ stats.payments_sum_today or 0 }}</span>
+            </div>
+            <a href="/payments" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">РЕФЕРАЛЫ</div>
+            <div class="card-metric">
+                <span class="metric-label">Всего:</span>
+                <span class="metric-value">{{ stats.total_refs }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">За сегодня:</span>
+                <span class="metric-value">{{ stats.refs_today or 0 }}</span>
+            </div>
+            <a href="/referrals" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">СЕРВЕРЫ</div>
+            <div class="card-metric">
+                <span class="metric-label">Всего используется:</span>
+                <span class="metric-value">{{ stats.servers_used or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Доступно:</span>
+                <span class="metric-value">{{ stats.servers_available or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Отключено:</span>
+                <span class="metric-value">{{ stats.servers_disabled or 0 }}</span>
+            </div>
+            <a href="/servers" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+        <div class="dashboard-card dashboard-card-square">
+            <div class="card-title-main">ПОДАРКИ</div>
+            <div class="card-metric">
+                <span class="metric-label">Всего:</span>
+                <span class="metric-value">{{ stats.total_gifts or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Использовано:</span>
+                <span class="metric-value">{{ stats.gifts_used or 0 }}</span>
+            </div>
+            <div class="card-metric">
+                <span class="metric-label">Активаций:</span>
+                <span class="metric-value">{{ stats.gifts_activated or 0 }}</span>
+            </div>
+            <a href="/gifts" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
+        </div>
+    </div>
+
+    <div class="dashboard-graphs">
+        <div class="dashboard-card dashboard-card-square dashboard-graph-card">
+            <div class="card-title-main">ПРИРОСТ КЛИЕНТОВ ЗА МЕСЯЦ</div>
+            <canvas id="usersGrowthChart" height="80"></canvas>
+        </div>
+        <div class="dashboard-card dashboard-card-square dashboard-graph-card">
+            <div class="card-title-main">ПРИРОСТ ПОДПИСОК ЗА МЕСЯЦ</div>
+            <canvas id="subsGrowthChart" height="80"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const usersGrowthData = {{ stats.users_growth_month|tojson }};
+        const subsGrowthData = {{ stats.subs_growth_month|tojson }};
+        const labels = {{ stats.last_30_days|tojson }};
+
+        const usersCtx = document.getElementById('usersGrowthChart').getContext('2d');
+        const subsCtx = document.getElementById('subsGrowthChart').getContext('2d');
+
+        new Chart(usersCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Клиенты',
+                    data: usersGrowthData,
+                    borderColor: '#ff7b00',
+                    backgroundColor: 'rgba(255,123,0,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+            }
+        });
+
+        new Chart(subsCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Подписки',
+                    data: subsGrowthData,
+                    borderColor: '#00c896',
+                    backgroundColor: 'rgba(0,200,150,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+            }
+        });
+    </script>
+{% endblock %}

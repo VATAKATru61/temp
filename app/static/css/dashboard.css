@@ -1,0 +1,220 @@
+.dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.dashboard-card-square {
+    background: #ffffff;
+    border-radius: 12px;
+    color: #333333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    min-width: 0;
+    width: calc(16.666% - 1rem);
+    max-width: none;
+    min-height: 210px;
+    height: 250px;
+    padding: 1.4rem 1.4rem 2.8rem 1.4rem; /* Увеличен padding-bottom для большего пространства */
+    position: relative;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card-square:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-title-main {
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    text-align: left;
+    color: #6b21a8;
+}
+
+.card-metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.08rem;
+    margin-bottom: 0.7rem;
+}
+
+.metric-label {
+    color: #6b7280;
+}
+
+.metric-value {
+    font-weight: 500;
+    color: #9333ea;
+}
+
+.card-more-btn {
+    position: absolute;
+    left: 1.4rem;
+    right: 1.4rem;
+    bottom: 0.4rem; /* Уменьшен bottom, чтобы опустить кнопку еще ниже */
+    width: calc(100% - 2.8rem);
+    text-align: center;
+    background: #9333ea; /* Фиолетовый цвет */
+    color: #ffffff;
+    padding: 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-more-btn:hover {
+    background: #7e22ce; /* Ховер для фиолетового */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-graphs {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.dashboard-graph-card {
+    background: #ffffff;
+    border-radius: 12px;
+    color: #333333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+    width: calc(50% - 0.6rem);
+    max-width: none;
+    min-height: 220px;
+    height: 240px;
+    padding: 1.4rem;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-graph-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-graph-card .card-title-main {
+    font-size: 1.08rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    text-align: left;
+    min-height: 2.5em;
+    display: flex;
+    align-items: flex-end;
+    color: #6b21a8;
+}
+
+.dashboard-graph-card canvas {
+    flex: 1 1 auto;
+    width: 100% !important;
+    height: 120px !important;
+    max-height: 140px;
+}
+
+/* Media Queries */
+@media (max-width: 1400px) {
+    .dashboard-card-square {
+        width: calc(25% - 1rem);
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard-card-square {
+        width: calc(33.333% - 1rem);
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-cards {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .dashboard-card-square {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        min-height: 140px;
+    }
+    .content {
+        margin-left: 0;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-card-square {
+        min-width: 100%;
+        width: 100%;
+        height: auto;
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-graphs {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .dashboard-graph-card {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 180px;
+        min-height: 120px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard-graphs {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .dashboard-graph-card {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .dashboard-graph-card {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: 180px;
+        min-height: 120px;
+    }
+    .dashboard-graphs {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+}

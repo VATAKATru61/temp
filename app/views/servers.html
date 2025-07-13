@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Серверы | SoloBot WEB{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/servers.css">
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <h1>Серверы</h1>
+  <p class="page-subtitle">Всего: {{ total_servers }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="table-container">
+  <div class="search-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <input type="text" id="serverSearchInput" placeholder="🔍 Поиск по имени, кластеру или URL..." />
+    <button onclick="openCreateModal()" class="btn btn-sm">Создать сервер</button>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Имя</th><th>Кластер</th><th>URL API</th><th>Ссылка</th>
+        <th>Inbound ID</th><th>Панель</th><th>Лимит ключей</th>
+        <th>Группа тарифов</th><th>Вкл</th><th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for server in servers %}
+      <tr>
+        <td>{{ server.id }}</td>
+        <td>{{ server.server_name }}</td>
+        <td>{{ server.cluster_name }}</td>
+        <td>{{ server.api_url }}</td>
+        <td>{{ server.subscription_url or '—' }}</td>
+        <td>{{ server.inbound_id }}</td>
+        <td>{{ server.panel_type }}</td>
+        <td>{{ server.max_keys or 0 }}</td>
+        <td>{{ server.tariff_group or '—' }}</td>
+        <td>{{ '✅' if server.enabled else '❌' }}</td>
+        <td>
+          <button onclick='openEditModal({{ server|tojson }})' class="btn btn-sm">✏️</button>
+          <button onclick='openDeleteModal("{{ server.server_name }}")' class="btn btn-sm btn-danger">🗑️</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" id="createModal">
+  <div class="modal-content">
+    <h2>Создать сервер</h2>
+    <form id="createServerForm">
+      <div class="form-group"><label>Имя:</label><input type="text" id="create-server_name" required></div>
+      <div class="form-group"><label>Кластер:</label><input type="text" id="create-cluster_name"></div>
+      <div class="form-group"><label>API URL:</label><input type="text" id="create-api_url"></div>
+      <div class="form-group"><label>Ссылка:</label><input type="text" id="create-subscription_url"></div>
+      <div class="form-group"><label>Inbound ID:</label><input type="text" id="create-inbound_id"></div>
+      <div class="form-group"><label>Панель:</label>
+        <select id="create-panel_type">
+          <option value="3x-ui">3x-ui</option>
+          <option value="remnawave">Remnawave</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Лимит ключей:</label><input type="number" id="create-max_keys" min="0"></div>
+      <div class="form-group"><label>Группа тарифов:</label>
+        <select id="create-tariff_group">
+          <option value="">— без группы —</option>
+          {% for code in group_codes %}
+          <option value="{{ code }}">{{ code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group"><label>Включён:</label>
+        <select id="create-enabled">
+          <option value="true">Да</option>
+          <option value="false">Нет</option>
+        </select>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn btn-sm btn-primary">Создать</button>
+        <button type="button" onclick="closeCreateModal()" class="btn btn-sm btn-secondary">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h2>Редактировать сервер</h2>
+    <form id="editServerForm">
+      <input type="hidden" id="edit-original_name">
+      <div class="form-group"><label>Имя:</label><input type="text" id="edit-server_name"></div>
+      <div class="form-group"><label>Кластер:</label><input type="text" id="edit-cluster_name"></div>
+      <div class="form-group"><label>API URL:</label><input type="text" id="edit-api_url"></div>
+      <div class="form-group"><label>Ссылка:</label><input type="text" id="edit-subscription_url"></div>
+      <div class="form-group"><label>Inbound ID:</label><input type="text" id="edit-inbound_id"></div>
+      <div class="form-group"><label>Панель:</label>
+        <select id="edit-panel_type">
+          <option value="3x-ui">3x-ui</option>
+          <option value="remnawave">Remnawave</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Лимит ключей:</label><input type="number" id="edit-max_keys" min="0"></div>
+      <div class="form-group"><label>Группа тарифов:</label>
+        <select id="edit-tariff_group">
+          <option value="">— без группы —</option>
+          {% for code in group_codes %}
+          <option value="{{ code }}">{{ code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group"><label>Включён:</label>
+        <select id="edit-enabled">
+          <option value="true">Да</option>
+          <option value="false">Нет</option>
+        </select>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+        <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-secondary">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal">
+  <div class="modal-content">
+    <p>Удалить сервер <span id="delete-server-id"></span>?</p>
+    <button onclick="confirmDelete()" class="btn btn-sm btn-danger">Да, удалить</button>
+    <button onclick="closeDeleteModal()" class="btn btn-sm btn-secondary">Отмена</button>
+  </div>
+</div>
+
+<script>
+const TG_ID = "{{ tg_id }}", TOKEN = "{{ token }}";
+
+function openCreateModal(){ document.getElementById('createModal').style.display='flex'; }
+function closeCreateModal(){ document.getElementById('createModal').style.display='none'; }
+document.getElementById('createServerForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const p=id=>document.getElementById(id).value;
+  const payload={
+    server_name:    p('create-server_name'),
+    cluster_name:   p('create-cluster_name')||null,
+    api_url:        p('create-api_url')||null,
+    subscription_url:p('create-subscription_url')||null,
+    inbound_id:     p('create-inbound_id')||null,
+    panel_type:     p('create-panel_type'),
+    max_keys:       parseInt(p('create-max_keys'),10)||0,
+    tariff_group:   p('create-tariff_group'),
+    enabled:        p('create-enabled')==='true'
+  };
+  const res=await fetch(`/servers?tg_id=${TG_ID}`,{
+    method:'POST',headers:{'Content-Type':'application/json','X-Token':TOKEN},body:JSON.stringify(payload)
+  });
+  res.ok?location.reload():alert(`❌ ${(await res.json()).error}`);
+});
+
+let selectedServerName=null;
+function openEditModal(s){
+  selectedServerName=s.server_name;
+  document.getElementById('edit-original_name').value=s.server_name;
+  for(const f of ['server_name','cluster_name','api_url','subscription_url','inbound_id','panel_type','max_keys','enabled']){
+    const el=document.getElementById('edit-'+f);
+    if(el) el.value=(typeof s[f]==='boolean'?s[f].toString():(s[f]||''));
+  }
+  document.getElementById('edit-tariff_group').value=s.tariff_group||'';
+  document.getElementById('editModal').style.display='flex';
+}
+function closeEditModal(){ document.getElementById('editModal').style.display='none'; }
+document.getElementById('editServerForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const p=id=>document.getElementById(id).value;
+  const payload={
+    server_name:    p('edit-server_name'),
+    cluster_name:   p('edit-cluster_name')||null,
+    api_url:        p('edit-api_url')||null,
+    subscription_url:p('edit-subscription_url')||null,
+    inbound_id:     p('edit-inbound_id')||null,
+    panel_type:     p('edit-panel_type'),
+    max_keys:       parseInt(p('edit-max_keys'),10)||0,
+    tariff_group:   p('edit-tariff_group'),
+    enabled:        p('edit-enabled')==='true'
+  };
+  const res=await fetch(`/servers/${encodeURIComponent(selectedServerName)}?tg_id=${TG_ID}`,{
+    method:'PATCH',headers:{'Content-Type':'application/json','X-Token':TOKEN},body:JSON.stringify(payload)
+  });
+  res.ok?location.reload():alert(`❌ ${(await res.json()).error}`);
+});
+
+function openDeleteModal(n){selectedServerName=n;document.getElementById('delete-server-id').innerText=n;document.getElementById('deleteModal').style.display='flex';}
+function closeDeleteModal(){document.getElementById('deleteModal').style.display='none';}
+async function confirmDelete(){
+  const res=await fetch(`/servers/${encodeURIComponent(selectedServerName)}?tg_id=${TG_ID}`,{method:'DELETE',headers:{'X-Token':TOKEN}});
+  res.ok?location.reload():alert(`❌ ${(await res.json()).error}`);
+}
+
+document.getElementById('serverSearchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('.data-table tbody tr').forEach(row => {
+    const cells = Array.from(row.cells).slice(0, -1);
+    row.style.display = cells.some(td => td.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

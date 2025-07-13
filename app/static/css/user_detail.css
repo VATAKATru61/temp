@@ -1,0 +1,109 @@
+.user-profile-flex {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+}
+
+.user-info-card {
+    background: #232323;
+    border-radius: 0.7rem;
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    font-size: 0.97rem;
+    border: 1.5px solid #292929;
+    gap: 0.3rem;
+    flex: 1 1 33%;
+    min-width: 260px;
+}
+
+.user-mini-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 2 1 67%;
+    min-width: 0;
+}
+
+.user-mini-card {
+    background: rgba(35, 35, 35, 0.95);
+    border-radius: 0.7rem;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 70px;
+    height: 100%;
+    color: #fff;
+    font-size: 0.96rem;
+    border: 1.5px solid #333;
+    gap: 0.15rem;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.user-mini-card:hover {
+    border-color: #ff7b00;
+    box-shadow: 0 0 8px rgba(255, 123, 0, 0.15);
+}
+
+.user-mini-card .mini-title {
+    font-size: 0.93rem;
+    color: #aaaaaa;
+}
+
+.user-mini-card .mini-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffa726;
+}
+
+.user-mini-card .mini-last {
+    font-size: 0.91rem;
+    color: #bdbdbd;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Маленькие кнопки */
+.btn-xs,
+.user-mini-card .btn-xs {
+    font-size: 0.98em;
+    padding: 0.18em 0.8em;
+    border-radius: 0.5em;
+    margin-left: 0.3em;
+    min-width: 1.8em;
+    min-height: 1.8em;
+    line-height: 1.2em;
+}
+
+.user-actions {
+    margin-top: 0.7rem;
+    display: flex;
+    gap: 0.3rem;
+}
+
+@media (max-width: 900px) {
+    .user-profile-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .user-info-card {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .user-mini-cards-grid {
+        flex-direction: column;
+        flex: 1 1 100%;
+    }
+}
