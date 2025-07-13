@@ -142,12 +142,13 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--gray-200);
             z-index: 100;
             padding: var(--space-3) 0;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
         
         .sticky-header-content {
@@ -212,7 +213,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(60px);
-            opacity: 0.1;
+            opacity: 0.08;
             animation: float 20s ease-in-out infinite;
         }
         
@@ -369,14 +370,17 @@
             line-height: 1.1;
             margin-bottom: var(--space-6);
             letter-spacing: -0.025em;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .hero-description {
             font-size: var(--text-xl);
             font-weight: 400;
-            opacity: 0.9;
+            opacity: 0.95;
             margin-bottom: var(--space-8);
             line-height: 1.6;
+            color: white;
         }
         
         .hero-actions {
@@ -416,7 +420,7 @@
         
         .section-subtitle {
             font-size: var(--text-lg);
-            color: var(--gray-700);
+            color: var(--gray-800);
             max-width: 600px;
             margin: 0 auto;
             font-weight: 500;
@@ -466,7 +470,7 @@
         }
         
         .feature-description {
-            color: var(--gray-700);
+            color: var(--gray-800);
             line-height: 1.6;
             font-weight: 500;
         }
@@ -503,7 +507,7 @@
         }
         
         .country-description {
-            color: var(--gray-700);
+            color: var(--gray-800);
             font-size: var(--text-sm);
             font-weight: 500;
         }
@@ -557,7 +561,7 @@
         }
         
         .price-period {
-            color: var(--gray-700);
+            color: var(--gray-800);
             margin-bottom: var(--space-6);
             font-weight: 500;
         }
@@ -571,6 +575,12 @@
             font-weight: 500;
             margin-bottom: var(--space-4);
             display: inline-block;
+        }
+        
+        .pricing-description {
+            color: var(--gray-800);
+            margin-bottom: var(--space-6);
+            font-weight: 500;
         }
         
         /* Footer */
@@ -737,7 +747,7 @@
     </header>
 
     <!-- Features Section -->
-    <section class="section">
+    <section class="section" style="background: white;">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Почему выбирают 🚀FastSafeNet🚀?</h2>
@@ -849,7 +859,7 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="section">
+    <section id="pricing" class="section" style="background: white;">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Выберите свой тариф</h2>
@@ -862,7 +872,7 @@
                 <div class="card pricing-card fade-in">
                     <div class="price">100₽</div>
                     <div class="price-period">1 месяц</div>
-                    <p class="feature-description">Идеально для знакомства с сервисом</p>
+                    <p class="pricing-description">Идеально для знакомства с сервисом</p>
                     <a href="https://t.me/fvpnru_bot" class="btn btn-secondary" target="_blank">
                         Выбрать
                     </a>
@@ -872,7 +882,7 @@
                     <div class="savings">Экономия 50₽</div>
                     <div class="price">190₽</div>
                     <div class="price-period">2 месяца</div>
-                    <p class="feature-description">Оптимальный выбор для большинства пользователей</p>
+                    <p class="pricing-description">Оптимальный выбор для большинства пользователей</p>
                     <a href="https://t.me/fvpnru_bot" class="btn btn-primary" target="_blank">
                         Выбрать
                     </a>
@@ -882,7 +892,7 @@
                     <div class="savings">Экономия 120₽</div>
                     <div class="price">280₽</div>
                     <div class="price-period">3 месяца</div>
-                    <p class="feature-description">Максимальная выгода для постоянного использования</p>
+                    <p class="pricing-description">Максимальная выгода для постоянного использования</p>
                     <a href="https://t.me/fvpnru_bot" class="btn btn-secondary" target="_blank">
                         Выбрать
                     </a>
