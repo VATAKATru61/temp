@@ -42,8 +42,14 @@
                 <td>{{ k.expiry_time_human }}</td>
                 <td>{{ k.server_id or '—' }}</td>
                 <td>
-                    <button class="btn btn-sm" data-key='{{ k | tojson | safe }}' onclick="openEditModalFromButton(this)">✏️</button>
-                    <button onclick='openDeleteModal("{{ k.email }}")' class="btn btn-sm btn-danger">🗑️</button>
+                    <button class="btn-edit" data-key='{{ k | tojson | safe }}' onclick="openEditModalFromButton(this)">
+                        <i class="fas fa-edit"></i>
+                        Редактировать
+                    </button>
+                    <button onclick='openDeleteModal("{{ k.email }}")' class="btn-delete">
+                        <i class="fas fa-trash"></i>
+                        Удалить
+                    </button>
                 </td>
             </tr>
             {% endfor %}

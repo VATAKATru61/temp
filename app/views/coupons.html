@@ -50,9 +50,15 @@
                 </td>
                 <td>{{ coupon.usage_limit }}</td>
                 <td>{{ coupon.used_count }}</td>
-                <td>
-                    <button onclick='openEditModal(JSON.parse(this.dataset.coupon))' data-coupon='{{ coupon | tojson | safe }}' class="btn btn-sm">✏️</button>
-                    <button onclick='openDeleteModal("{{ coupon.code }}")' class="btn btn-sm btn-danger">🗑️</button>
+                <td class="table-cell-actions">
+                    <button onclick='openEditModal(JSON.parse(this.dataset.coupon))' data-coupon='{{ coupon | tojson | safe }}' class="btn-edit">
+                        <i class="fas fa-edit"></i>
+                        Редактировать
+                    </button>
+                    <button onclick='openDeleteModal("{{ coupon.code }}")' class="btn-delete">
+                        <i class="fas fa-trash"></i>
+                        Удалить
+                    </button>
                 </td>
             </tr>
             {% endfor %}

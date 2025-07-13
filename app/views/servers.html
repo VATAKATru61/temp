@@ -37,14 +37,32 @@
         <td>{{ server.api_url }}</td>
         <td>{{ server.subscription_url or '—' }}</td>
         <td>{{ server.inbound_id }}</td>
-        <td>{{ server.panel_type }}</td>
-        <td>{{ server.max_keys or 0 }}</td>
-        <td>{{ server.tariff_group or '—' }}</td>
-        <td>{{ '✅' if server.enabled else '❌' }}</td>
-        <td>
-          <button onclick='openEditModal({{ server|tojson }})' class="btn btn-sm">✏️</button>
-          <button onclick='openDeleteModal("{{ server.server_name }}")' class="btn btn-sm btn-danger">🗑️</button>
-        </td>
+                  <td>{{ server.panel_type }}</td>
+          <td>{{ server.max_keys or 0 }}</td>
+          <td>{{ server.tariff_group or '—' }}</td>
+          <td>
+              {% if server.enabled %}
+                  <span class="btn-status-active">
+                      <i class="fas fa-check"></i>
+                      Включен
+                  </span>
+              {% else %}
+                  <span class="btn-status-inactive">
+                      <i class="fas fa-times"></i>
+                      Отключен
+                  </span>
+              {% endif %}
+          </td>
+          <td class="table-cell-actions">
+              <button onclick='openEditModal({{ server|tojson }})' class="btn-edit">
+                  <i class="fas fa-edit"></i>
+                  Редактировать
+              </button>
+              <button onclick='openDeleteModal("{{ server.server_name }}")' class="btn-delete">
+                  <i class="fas fa-trash"></i>
+                  Удалить
+              </button>
+          </td>
       </tr>
       {% endfor %}
     </tbody>

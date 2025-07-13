@@ -10,25 +10,30 @@
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     animation: fadeIn 0.3s ease-out;
-}
-
-.modal.show {
-    display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
 }
 
+.modal[style*="flex"],
+.modal[style*="block"] {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
 .modal-content {
     background: var(--bg-primary);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
     animation: slideIn 0.3s ease-out;
+    backdrop-filter: blur(10px);
 }
 
 @keyframes slideIn {

@@ -8,7 +8,10 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Пользователи</h1>
+    <h1>
+        <i class="fas fa-users"></i>
+        Пользователи
+    </h1>
     <p class="page-subtitle">Всего: {{ total_users }}</p>
 </div>
 {% endblock %}
@@ -16,32 +19,59 @@
 {% block content %}
 <div class="table-container">
     <div class="search-container">
-        <input type="text" id="userSearchInput" placeholder="🔍 Поиск по имени, username или ID..." />
+        <input type="text" id="userSearchInput" class="search-input" placeholder="🔍 Поиск по имени, username или ID..." />
+        <button class="btn btn-primary" onclick="openCreateModal()">
+            <i class="fas fa-plus"></i>
+            Добавить пользователя
+        </button>
     </div>
 
     <table class="data-table">
         <thead>
             <tr>
-                <th>tg_id</th>
+                <th>ID</th>
                 <th>Имя</th>
                 <th>Username</th>
                 <th>Баланс</th>
                 <th>Trial</th>
+                <th>Статус</th>
                 <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.tg_id }}</td>
-                <td>{{ user.first_name or "-" }}</td>
+                <td class="table-cell-id">{{ user.tg_id }}</td>
+                <td>{{ user.first_name or "—" }}</td>
                 <td>@{{ user.username or "—" }}</td>
-                <td>{{ user.balance }}</td>
+                <td class="table-cell-amount">{{ user.balance }}₽</td>
                 <td>{{ user.trial }}</td>
                 <td>
-                    <button onclick='openEditModal({{ user | tojson | safe }})' class="btn btn-sm">✏️</button>
-                    <button onclick="openDeleteModal('{{ user.tg_id }}')" class="btn btn-sm btn-danger">🗑️</button>
-                    <a href="/users/{{ user.tg_id }}" class="btn btn-sm btn-secondary" title="Открыть профиль">➡️</a>
+                    {% if user.is_active %}
+                        <span class="btn-status-active">
+                            <i class="fas fa-check"></i>
+                            Активен
+                        </span>
+                    {% else %}
+                        <span class="btn-status-inactive">
+                            <i class="fas fa-times"></i>
+                            Неактивен
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="table-cell-actions">
+                    <button onclick='openEditModal({{ user | tojson | safe }})' class="btn-edit">
+                        <i class="fas fa-edit"></i>
+                        Редактировать
+                    </button>
+                    <button onclick="openDeleteModal('{{ user.tg_id }}')" class="btn-delete">
+                        <i class="fas fa-trash"></i>
+                        Удалить
+                    </button>
+                    <a href="/users/{{ user.tg_id }}" class="btn-view">
+                        <i class="fas fa-eye"></i>
+                        Перейти
+                    </a>
                 </td>
             </tr>
             {% endfor %}
@@ -49,35 +79,63 @@
     </table>
 </div>
 
+<!-- Edit Modal -->
 <div class="modal" id="editModal">
     <div class="modal-content">
-        <h2>Редактировать пользователя</h2>
-        <form id="editUserForm">
-            <input type="hidden" id="edit-tg_id">
+        <div class="modal-header">
+            <h2>Редактировать пользователя</h2>
+            <button class="close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" id="edit-tg_id">
 
-            <div class="form-group">
-                <label for="edit-balance">Баланс:</label>
-                <input type="number" id="edit-balance" step="0.01">
-            </div>
+                <div class="form-group">
+                    <label for="edit-balance">Баланс:</label>
+                    <input type="number" id="edit-balance" class="form-control" step="0.01">
+                </div>
 
-            <div class="form-group">
-                <label for="edit-trial">Trial:</label>
-                <input type="number" id="edit-trial">
-            </div>
+                <div class="form-group">
+                    <label for="edit-trial">Trial:</label>
+                    <input type="number" id="edit-trial" class="form-control">
+                </div>
 
-            <div class="form-buttons">
-                <button type="submit" class="btn btn-sm">Сохранить</button>
-                <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-secondary">Отмена</button>
-            </div>
-        </form>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Сохранить
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
+<!-- Delete Modal -->
 <div class="modal" id="deleteModal">
     <div class="modal-content">
-        <p>Вы уверены, что хотите удалить пользователя <span id="delete-user-id"></span>?</p>
-        <button onclick="confirmDelete()" class="btn btn-sm btn-danger">Да, удалить</button>
-        <button onclick="closeDeleteModal()" class="btn btn-sm btn-secondary">Отмена</button>
+        <div class="modal-header">
+            <h2>Подтверждение удаления</h2>
+            <button class="close" onclick="closeDeleteModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Вы уверены, что хотите удалить пользователя <strong><span id="delete-user-id"></span></strong>?</p>
+            <p class="text-muted">Это действие нельзя отменить.</p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="confirmDelete()" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+                Да, удалить
+            </button>
+            <button onclick="closeDeleteModal()" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Отмена
+            </button>
+        </div>
     </div>
 </div>
 
@@ -113,19 +171,28 @@
             }
         }
 
-        const res = await fetch(`/users/${tg_id}?tg_id={{ admin_tg_id }}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Token": "{{ token }}"
-            },
-            body: JSON.stringify(payload)
-        });
+        showLoading();
+        
+        try {
+            const res = await fetch(`/users/${tg_id}?tg_id={{ admin_tg_id }}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Token": "{{ token }}"
+                },
+                body: JSON.stringify(payload)
+            });
 
-        if (res.ok) {
-            location.reload();
-        } else {
-            alert("❌ Ошибка при обновлении пользователя");
+            if (res.ok) {
+                showToast('Пользователь успешно обновлен', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast('❌ Ошибка при обновлении пользователя', 'error');
+            }
+        } catch (error) {
+            showToast('❌ Ошибка сети', 'error');
+        } finally {
+            hideLoading();
         }
     });
 
@@ -140,17 +207,27 @@
     }
 
     async function confirmDelete() {
-        const res = await fetch(`/users/${selectedUserId}`, {
-            method: "DELETE"
-        });
+        showLoading();
+        
+        try {
+            const res = await fetch(`/users/${selectedUserId}`, {
+                method: "DELETE"
+            });
 
-        if (res.ok) {
-            location.reload();
-        } else {
-            alert("❌ Ошибка при удалении пользователя");
+            if (res.ok) {
+                showToast('Пользователь успешно удален', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast('❌ Ошибка при удалении пользователя', 'error');
+            }
+        } catch (error) {
+            showToast('❌ Ошибка сети', 'error');
+        } finally {
+            hideLoading();
         }
     }
 
+    // Search functionality
     document.getElementById('userSearchInput').addEventListener('input', function () {
         const filter = this.value.toLowerCase();
         const rows = document.querySelectorAll('.data-table tbody tr');
@@ -162,6 +239,25 @@
             );
             row.style.display = match ? '' : 'none';
         });
+    });
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Escape key to close modals
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
     });
 </script>
 {% endblock %}

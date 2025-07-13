@@ -41,7 +41,10 @@
                 <span title="{{ subscriptions[-1].expiry_time }}">
                     {{ subscriptions[-1].key[:6] ~ '...' if subscriptions[-1].key else '' }}
                 </span>
-                <a href="#subs-table" class="btn btn-xs btn-secondary" title="К подпискам">➡️</a>
+                                    <a href="#subs-table" class="btn-view" title="К подпискам">
+                        <i class="fas fa-arrow-right"></i>
+                        Перейти
+                    </a>
             </div>
             {% endif %}
         </div>
@@ -52,7 +55,10 @@
             <div class="mini-last">
                 Последний:
                 <span title="{{ gifts[-1].created_at }}">{{ gifts[-1].gift_id }}</span>
-                <a href="#gifts-table" class="btn btn-xs btn-secondary" title="К подаркам">➡️</a>
+                                    <a href="#gifts-table" class="btn-view" title="К подаркам">
+                        <i class="fas fa-arrow-right"></i>
+                        Перейти
+                    </a>
             </div>
             {% endif %}
         </div>
@@ -63,7 +69,10 @@
             <div class="mini-last">
                 Последний:
                 <span title="{{ payments[-1].created_at }}">{{ payments[-1].amount }}₽</span>
-                <a href="#payments-table" class="btn btn-xs btn-secondary" title="К платежам">➡️</a>
+                                    <a href="#payments-table" class="btn-view" title="К платежам">
+                        <i class="fas fa-arrow-right"></i>
+                        Перейти
+                    </a>
             </div>
             {% endif %}
         </div>
@@ -74,7 +83,10 @@
             <div class="mini-last">
                 Последний:
                 <span title="{{ referrals[-1].referred_tg_id }}">{{ referrals[-1].referred_tg_id }}</span>
-                <a href="/users/{{ referrals[-1].referred_tg_id }}" class="btn btn-xs btn-secondary" title="К рефералу">➡️</a>
+                                    <a href="/users/{{ referrals[-1].referred_tg_id }}" class="btn-view" title="К рефералу">
+                        <i class="fas fa-arrow-right"></i>
+                        Перейти
+                    </a>
             </div>
             {% endif %}
         </div>

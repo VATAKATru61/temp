@@ -37,14 +37,32 @@
                     <td>{{ t.id }}</td>
                     <td>{{ t.name }}</td>
                     <td>{{ t.duration_days }}</td>
-                    <td>{{ t.traffic_limit }}</td>
-                    <td>{{ t.device_limit }}</td>
-                    <td>{{ t.price_rub }}</td>
-                    <td>{{ '✅' if t.is_active else '❌' }}</td>
-                    <td>
-                      <button onclick='openEditModal({{ t|tojson }})' class="btn btn-sm">✏️</button>
-                      <button onclick='openDeleteModal("{{ t.name }}")' class="btn btn-sm btn-danger">🗑️</button>
-                    </td>
+                                          <td>{{ t.traffic_limit }}</td>
+                      <td>{{ t.device_limit }}</td>
+                      <td>{{ t.price_rub }}</td>
+                      <td>
+                          {% if t.is_active %}
+                              <span class="btn-status-active">
+                                  <i class="fas fa-check"></i>
+                                  Активен
+                              </span>
+                          {% else %}
+                              <span class="btn-status-inactive">
+                                  <i class="fas fa-times"></i>
+                                  Неактивен
+                              </span>
+                          {% endif %}
+                      </td>
+                      <td class="table-cell-actions">
+                          <button onclick='openEditModal({{ t|tojson }})' class="btn-edit">
+                              <i class="fas fa-edit"></i>
+                              Редактировать
+                          </button>
+                          <button onclick='openDeleteModal("{{ t.name }}")' class="btn-delete">
+                              <i class="fas fa-trash"></i>
+                              Удалить
+                          </button>
+                      </td>
                 </tr>
                 {% endfor %}
             </tbody>

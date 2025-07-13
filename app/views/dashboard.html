@@ -266,16 +266,17 @@
             </div>
         </div>
         
-        <div class="activity-list">
+        <div class="activity-list" id="activityList">
+            <!-- Активность будет загружена динамически -->
             <div class="activity-item">
                 <div class="activity-icon success">
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <div class="activity-content">
-                    <div class="activity-message">Новый пользователь зарегистрирован</div>
-                    <div class="activity-time">2 минуты назад</div>
+                    <div class="activity-message">Пользователь ID:12345 зарегистрировался</div>
+                    <div class="activity-time">Только что</div>
                     <div class="activity-meta">
-                        <span class="activity-badge success">Регистрация</span>
+                        <span class="activity-badge success">Пользователи</span>
                     </div>
                 </div>
             </div>
@@ -285,23 +286,10 @@
                     <i class="fas fa-credit-card"></i>
                 </div>
                 <div class="activity-content">
-                    <div class="activity-message">Получен новый платеж на сумму 299₽</div>
-                    <div class="activity-time">5 минут назад</div>
+                    <div class="activity-message">Платеж 299₽ от пользователя @username</div>
+                    <div class="activity-time">3 минуты назад</div>
                     <div class="activity-meta">
-                        <span class="activity-badge info">Платеж</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon warning">
-                    <i class="fas fa-server"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Сервер US-1 перезапущен</div>
-                    <div class="activity-time">12 минут назад</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge warning">Система</span>
+                        <span class="activity-badge info">Платежи</span>
                     </div>
                 </div>
             </div>
@@ -311,10 +299,23 @@
                     <i class="fas fa-key"></i>
                 </div>
                 <div class="activity-content">
-                    <div class="activity-message">Создан новый ключ для пользователя</div>
-                    <div class="activity-time">18 минут назад</div>
+                    <div class="activity-message">Создан ключ для пользователя ID:12340</div>
+                    <div class="activity-time">15 минут назад</div>
                     <div class="activity-meta">
-                        <span class="activity-badge success">Ключ</span>
+                        <span class="activity-badge success">Ключи</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon warning">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Сервер EU-2 превысил лимит подключений</div>
+                    <div class="activity-time">1 час назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge warning">Системы</span>
                     </div>
                 </div>
             </div>
@@ -324,10 +325,10 @@
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div class="activity-content">
-                    <div class="activity-message">Истек срок действия ключа</div>
-                    <div class="activity-time">25 минут назад</div>
+                    <div class="activity-message">Истек ключ пользователя ID:12300</div>
+                    <div class="activity-time">2 часа назад</div>
                     <div class="activity-meta">
-                        <span class="activity-badge danger">Истечение</span>
+                        <span class="activity-badge danger">Истечения</span>
                     </div>
                 </div>
             </div>
@@ -453,11 +454,37 @@
         });
     });
     
-    function updateChartData(period) {
-        // This would typically fetch new data from the server
-        // For now, we'll just simulate the functionality
-        console.log(`Updating chart data for period: ${period}`);
-    }
+                   function updateChartData(period) {
+         // Симуляция данных для разных периодов
+         let newUsersData, newSubsData, newLabels;
+         
+         if (period === '1') {
+             // Данные за сегодня (по часам)
+             newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
+             newUsersData = [2, 5, 8, 12, 15, 18];
+             newSubsData = [1, 3, 5, 7, 9, 11];
+         } else if (period === '7') {
+             // Данные за 7 дней
+             newLabels = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+             newUsersData = [25, 30, 28, 35, 40, 45, 38];
+             newSubsData = [15, 18, 16, 22, 25, 28, 24];
+         } else {
+             // Данные за 30 дней (исходные)
+             newLabels = dates;
+             newUsersData = usersData;
+             newSubsData = subsData;
+         }
+         
+         // Обновляем график пользователей
+         usersChart.data.labels = newLabels;
+         usersChart.data.datasets[0].data = newUsersData;
+         usersChart.update();
+         
+         // Обновляем график подписок
+         subscriptionsChart.data.labels = newLabels;
+         subscriptionsChart.data.datasets[0].data = newSubsData;
+         subscriptionsChart.update();
+     }
     
     // Activity filter functionality
     document.querySelectorAll('.activity-filter-btn').forEach(button => {
@@ -476,24 +503,31 @@
         });
     });
     
-    function filterActivityItems(filter) {
-        const items = document.querySelectorAll('.activity-item');
-        
-        items.forEach(item => {
-            if (filter === 'все') {
-                item.style.display = 'flex';
-            } else {
-                const badge = item.querySelector('.activity-badge');
-                const badgeText = badge ? badge.textContent.toLowerCase() : '';
-                
-                if (badgeText.includes(filter) || filter === 'все') {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            }
-        });
-    }
+              function filterActivityItems(filter) {
+         const items = document.querySelectorAll('.activity-item');
+         
+         items.forEach(item => {
+             if (filter === 'все') {
+                 item.style.display = 'flex';
+             } else {
+                 const badge = item.querySelector('.activity-badge');
+                 const badgeText = badge ? badge.textContent.toLowerCase() : '';
+                 
+                 // Проверяем соответствие фильтра
+                 let shouldShow = false;
+                 
+                 if (filter === 'пользователи' && badgeText.includes('пользователи')) {
+                     shouldShow = true;
+                 } else if (filter === 'платежи' && badgeText.includes('платежи')) {
+                     shouldShow = true;
+                 } else if (filter === 'системы' && (badgeText.includes('системы') || badgeText.includes('ключи'))) {
+                     shouldShow = true;
+                 }
+                 
+                 item.style.display = shouldShow ? 'flex' : 'none';
+             }
+         });
+     }
     
     // Auto-refresh dashboard data every 30 seconds
     setInterval(() => {

@@ -44,9 +44,11 @@
                     {{ r.bonus or '—' }}
                   {% endif %}
                 </td>
-                <td>
-                  <button class="btn btn-sm btn-danger"
-    onclick="deleteReferral('{{ r.referrer_tg_id }}', '{{ r.referred_tg_id }}')">🗑️</button>
+                <td class="table-cell-actions">
+                    <button class="btn-delete" onclick="deleteReferral('{{ r.referrer_tg_id }}', '{{ r.referred_tg_id }}')">
+                        <i class="fas fa-trash"></i>
+                        Удалить
+                    </button>
                 </td>
             </tr>
             {% endfor %}
