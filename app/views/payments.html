@@ -6,7 +6,10 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Оплаты</h1>
+    <h1>
+        <i class="fas fa-credit-card"></i>
+        Оплаты
+    </h1>
     <p class="page-subtitle">Всего: {{ payments|length }}</p>
 </div>
 {% endblock %}
@@ -14,7 +17,7 @@
 {% block content %}
 <div class="table-container">
     <div class="search-container">
-        <input type="text" id="searchPaymentInput" placeholder="🔍 Поиск по ID, tg_id, кассе...">
+        <input type="text" id="searchPaymentInput" class="search-input" placeholder="🔍 Поиск по ID, пользователю, кассе или сумме...">
     </div>
     <table class="data-table" id="paymentsTable">
         <thead>

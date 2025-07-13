@@ -19,7 +19,7 @@
     <div class="search-container">
         <input type="text" id="giftSearchInput" class="search-input" placeholder="🔍 Поиск по ID, получателю, отправителю..." />
         <div style="display: flex; gap: 0.5rem;">
-            <button class="btn btn-sm" onclick="openCreateModal()">Создать подарок</button>
+            <button class="btn btn-sm btn-success" onclick="openCreateModal()">Создать подарок</button>
             <button class="btn btn-sm btn-danger" id="delete-selected-gifts">Удалить выбранные</button>
         </div>
     </div>
@@ -77,131 +77,168 @@
 
 <div class="modal" id="editModal">
   <div class="modal-content">
-    <h2>Редактировать подарок</h2>
-    <form id="editGiftForm">
-      <input type="hidden" id="edit-gift_id">
-      <div class="form-group">
-        <label>Отправитель (sender_tg_id):</label>
-        <input type="text" id="edit-sender_tg_id">
-      </div>
-      <div class="form-group">
-        <label>Получатель (recipient_tg_id):</label>
-        <input type="text" id="edit-recipient_tg_id">
-      </div>
-      <div class="form-group">
-        <label>Месяцы (selected_months):</label>
-        <input type="number" id="edit-selected_months" min="0">
-      </div>
-      <div class="form-group">
-        <label>Тариф (tariff_id):</label>
-        <select id="edit-tariff_id" required>
-          {% for t in tariffs %}
-            <option value="{{ t.id }}">{{ t.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Комментарий:</label>
-        <input type="text" id="edit-comment">
-      </div>
-      <div class="form-group">
-        <label>Безлимит:</label>
-        <select id="edit-is_unlimited">
-          <option value="false">Нет</option>
-          <option value="true">Да</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Использован:</label>
-        <select id="edit-is_used">
-          <option value="false">Нет</option>
-          <option value="true">Да</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Макс. использования (max_usages):</label>
-        <input type="number" id="edit-max_usages" min="0">
-      </div>
-      <div class="form-group">
-        <label>Ссылка на подарок (gift_link):</label>
-        <input type="text" id="edit-gift_link">
-      </div>
-      <div class="form-group">
-        <label>Время истечения (expiry_time):</label>
-        <input type="text" id="edit-expiry_time" placeholder="YYYY-MM-DD HH:MM:SS">
-      </div>
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-sm">Сохранить</button>
-        <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-secondary">Отмена</button>
-      </div>
-    </form>
+    <div class="modal-header">
+      <h2>Редактировать подарок</h2>
+      <button class="close" onclick="closeEditModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="editGiftForm">
+        <input type="hidden" id="edit-gift_id">
+        <div class="form-group">
+          <label>ID отправителя:</label>
+          <input type="text" id="edit-sender_tg_id" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>ID получателя:</label>
+          <input type="text" id="edit-recipient_tg_id" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Количество месяцев:</label>
+          <input type="number" id="edit-selected_months" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Тариф:</label>
+          <select id="edit-tariff_id" class="form-control" required>
+            {% for t in tariffs %}
+              <option value="{{ t.id }}">{{ t.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Комментарий:</label>
+          <input type="text" id="edit-comment" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Безлимитный:</label>
+          <select id="edit-is_unlimited" class="form-control">
+            <option value="false">Нет</option>
+            <option value="true">Да</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Использован:</label>
+          <select id="edit-is_used" class="form-control">
+            <option value="false">Нет</option>
+            <option value="true">Да</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Макс. использований:</label>
+          <input type="number" id="edit-max_usages" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Ссылка на подарок:</label>
+          <input type="text" id="edit-gift_link" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Время истечения:</label>
+          <input type="text" id="edit-expiry_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS">
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Сохранить
+          </button>
+          <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="deleteModal">
   <div class="modal-content">
-    <p>Удалить подарок с ID <strong><span id="delete-gift-id"></span></strong>?</p>
-    <button onclick="confirmDelete()" class="btn btn-sm btn-danger">Да, удалить</button>
-    <button onclick="closeDeleteModal()" class="btn btn-sm btn-secondary">Отмена</button>
+    <div class="modal-header">
+      <h2>Подтверждение удаления</h2>
+      <button class="close" onclick="closeDeleteModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Вы уверены, что хотите удалить подарок с ID <strong><span id="delete-gift-id"></span></strong>?</p>
+      <p class="text-muted">Это действие нельзя отменить.</p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="confirmDelete()" class="btn btn-danger">
+        <i class="fas fa-trash"></i>
+        Да, удалить
+      </button>
+      <button onclick="closeDeleteModal()" class="btn btn-secondary">
+        <i class="fas fa-times"></i>
+        Отмена
+      </button>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="createModal">
   <div class="modal-content">
-    <h2>Создать подарок</h2>
-    <form id="createGiftForm">
-      <input type="hidden" id="create-sender_tg_id" value="{{ tg_id }}">
-      <div class="form-group">
-        <label>Получатель (recipient_tg_id):</label>
-        <input type="text" id="create-recipient_tg_id">
-      </div>
-      <div class="form-group" style="display: none;">
-        <label>Месяцы (selected_months):</label>
-        <input type="number" id="create-selected_months" min="0" value="0" required>
-      </div>
-      <div class="form-group">
-        <label>Тариф (tariff_id):</label>
-        <select id="create-tariff_id" required>
-          {% for t in tariffs %}
-            <option value="{{ t.id }}">{{ t.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Макс. использования (max_usages):</label>
-        <input type="number" id="create-max_usages" min="0" value="0">
-      </div>
-      <div class="form-group" style="display: none;">
-        <label>Ссылка на подарок (gift_link):</label>
-        <input type="text" id="create-gift_link">
-      </div>
-      <div class="form-group" style="display: none;">
-        <label>Время истечения (expiry_time):</label>
-        <input type="datetime-local" id="create-expiry_time">
-      </div>
-      <div class="form-group">
-        <label>Безлимит:</label>
-        <select id="create-is_unlimited">
-          <option value="false">Нет</option>
-          <option value="true">Да</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Использован:</label>
-        <select id="create-is_used">
-          <option value="false">Нет</option>
-          <option value="true">Да</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Количество:</label>
-        <input type="number" id="create-count" min="1" value="1" required>
-      </div>
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-sm">Создать</button>
-        <button type="button" onclick="closeCreateModal()" class="btn btn-sm btn-secondary">Отмена</button>
-      </div>
-    </form>
+    <div class="modal-header">
+      <h2>Создать подарок</h2>
+      <button class="close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="createGiftForm">
+        <input type="hidden" id="create-sender_tg_id" value="{{ tg_id }}">
+        <div class="form-group">
+          <label>ID получателя:</label>
+          <input type="text" id="create-recipient_tg_id" class="form-control">
+        </div>
+        <div class="form-group" style="display: none;">
+          <label>Количество месяцев:</label>
+          <input type="number" id="create-selected_months" class="form-control" min="0" value="0" required>
+        </div>
+        <div class="form-group">
+          <label>Тариф:</label>
+          <select id="create-tariff_id" class="form-control" required>
+            {% for t in tariffs %}
+              <option value="{{ t.id }}">{{ t.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Макс. использований:</label>
+          <input type="number" id="create-max_usages" class="form-control" min="0" value="0">
+        </div>
+        <div class="form-group" style="display: none;">
+          <label>Ссылка на подарок:</label>
+          <input type="text" id="create-gift_link" class="form-control">
+        </div>
+        <div class="form-group" style="display: none;">
+          <label>Время истечения:</label>
+          <input type="datetime-local" id="create-expiry_time" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Безлимитный:</label>
+          <select id="create-is_unlimited" class="form-control">
+            <option value="false">Нет</option>
+            <option value="true">Да</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Использован:</label>
+          <select id="create-is_used" class="form-control">
+            <option value="false">Нет</option>
+            <option value="true">Да</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Количество:</label>
+          <input type="number" id="create-count" class="form-control" min="1" value="1" required>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Создать
+          </button>
+          <button type="button" onclick="closeCreateModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

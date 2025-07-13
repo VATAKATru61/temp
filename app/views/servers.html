@@ -74,86 +74,165 @@
 
 <div class="modal" id="createModal">
   <div class="modal-content">
-    <h2>Создать сервер</h2>
-    <form id="createServerForm">
-      <div class="form-group"><label>Имя:</label><input type="text" id="create-server_name" required></div>
-      <div class="form-group"><label>Кластер:</label><input type="text" id="create-cluster_name"></div>
-      <div class="form-group"><label>API URL:</label><input type="text" id="create-api_url"></div>
-      <div class="form-group"><label>Ссылка:</label><input type="text" id="create-subscription_url"></div>
-      <div class="form-group"><label>Inbound ID:</label><input type="text" id="create-inbound_id"></div>
-      <div class="form-group"><label>Панель:</label>
-        <select id="create-panel_type">
-          <option value="3x-ui">3x-ui</option>
-          <option value="remnawave">Remnawave</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Лимит ключей:</label><input type="number" id="create-max_keys" min="0"></div>
-      <div class="form-group"><label>Группа тарифов:</label>
-        <select id="create-tariff_group">
-          <option value="">— без группы —</option>
-          {% for code in group_codes %}
-          <option value="{{ code }}">{{ code }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group"><label>Включён:</label>
-        <select id="create-enabled">
-          <option value="true">Да</option>
-          <option value="false">Нет</option>
-        </select>
-      </div>
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-sm btn-primary">Создать</button>
-        <button type="button" onclick="closeCreateModal()" class="btn btn-sm btn-secondary">Отмена</button>
-      </div>
-    </form>
+    <div class="modal-header">
+      <h2>Создать сервер</h2>
+      <button class="close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="createServerForm">
+        <div class="form-group">
+          <label>Имя сервера:</label>
+          <input type="text" id="create-server_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Кластер:</label>
+          <input type="text" id="create-cluster_name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>API URL:</label>
+          <input type="text" id="create-api_url" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Ссылка подписки:</label>
+          <input type="text" id="create-subscription_url" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Inbound ID:</label>
+          <input type="text" id="create-inbound_id" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Тип панели:</label>
+          <select id="create-panel_type" class="form-control">
+            <option value="3x-ui">3x-ui</option>
+            <option value="remnawave">Remnawave</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Лимит ключей:</label>
+          <input type="number" id="create-max_keys" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Группа тарифов:</label>
+          <select id="create-tariff_group" class="form-control">
+            <option value="">— без группы —</option>
+            {% for code in group_codes %}
+            <option value="{{ code }}">{{ code }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Статус:</label>
+          <select id="create-enabled" class="form-control">
+            <option value="true">Включён</option>
+            <option value="false">Отключён</option>
+          </select>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Создать
+          </button>
+          <button type="button" onclick="closeCreateModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="editModal">
   <div class="modal-content">
-    <h2>Редактировать сервер</h2>
-    <form id="editServerForm">
-      <input type="hidden" id="edit-original_name">
-      <div class="form-group"><label>Имя:</label><input type="text" id="edit-server_name"></div>
-      <div class="form-group"><label>Кластер:</label><input type="text" id="edit-cluster_name"></div>
-      <div class="form-group"><label>API URL:</label><input type="text" id="edit-api_url"></div>
-      <div class="form-group"><label>Ссылка:</label><input type="text" id="edit-subscription_url"></div>
-      <div class="form-group"><label>Inbound ID:</label><input type="text" id="edit-inbound_id"></div>
-      <div class="form-group"><label>Панель:</label>
-        <select id="edit-panel_type">
-          <option value="3x-ui">3x-ui</option>
-          <option value="remnawave">Remnawave</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Лимит ключей:</label><input type="number" id="edit-max_keys" min="0"></div>
-      <div class="form-group"><label>Группа тарифов:</label>
-        <select id="edit-tariff_group">
-          <option value="">— без группы —</option>
-          {% for code in group_codes %}
-          <option value="{{ code }}">{{ code }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group"><label>Включён:</label>
-        <select id="edit-enabled">
-          <option value="true">Да</option>
-          <option value="false">Нет</option>
-        </select>
-      </div>
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
-        <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-secondary">Отмена</button>
-      </div>
-    </form>
+    <div class="modal-header">
+      <h2>Редактировать сервер</h2>
+      <button class="close" onclick="closeEditModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="editServerForm">
+        <input type="hidden" id="edit-original_name">
+        <div class="form-group">
+          <label>Имя сервера:</label>
+          <input type="text" id="edit-server_name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Кластер:</label>
+          <input type="text" id="edit-cluster_name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>API URL:</label>
+          <input type="text" id="edit-api_url" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Ссылка подписки:</label>
+          <input type="text" id="edit-subscription_url" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Inbound ID:</label>
+          <input type="text" id="edit-inbound_id" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Тип панели:</label>
+          <select id="edit-panel_type" class="form-control">
+            <option value="3x-ui">3x-ui</option>
+            <option value="remnawave">Remnawave</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Лимит ключей:</label>
+          <input type="number" id="edit-max_keys" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Группа тарифов:</label>
+          <select id="edit-tariff_group" class="form-control">
+            <option value="">— без группы —</option>
+            {% for code in group_codes %}
+            <option value="{{ code }}">{{ code }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Статус:</label>
+          <select id="edit-enabled" class="form-control">
+            <option value="true">Включён</option>
+            <option value="false">Отключён</option>
+          </select>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Сохранить
+          </button>
+          <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="deleteModal">
   <div class="modal-content">
-    <p>Удалить сервер <span id="delete-server-id"></span>?</p>
-    <button onclick="confirmDelete()" class="btn btn-sm btn-danger">Да, удалить</button>
-    <button onclick="closeDeleteModal()" class="btn btn-sm btn-secondary">Отмена</button>
+    <div class="modal-header">
+      <h2>Подтверждение удаления</h2>
+      <button class="close" onclick="closeDeleteModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Вы уверены, что хотите удалить сервер <strong><span id="delete-server-id"></span></strong>?</p>
+      <p class="text-muted">Это действие нельзя отменить.</p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="confirmDelete()" class="btn btn-danger">
+        <i class="fas fa-trash"></i>
+        Да, удалить
+      </button>
+      <button onclick="closeDeleteModal()" class="btn btn-secondary">
+        <i class="fas fa-times"></i>
+        Отмена
+      </button>
+    </div>
   </div>
 </div>
 

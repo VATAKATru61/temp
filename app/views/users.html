@@ -30,7 +30,6 @@
                 <th>Username</th>
                 <th>Баланс</th>
                 <th>Trial</th>
-                <th>Статус</th>
                 <th>Действия</th>
             </tr>
         </thead>
@@ -42,19 +41,6 @@
                 <td>@{{ user.username or "—" }}</td>
                 <td class="table-cell-amount">{{ user.balance }}₽</td>
                 <td>{{ user.trial }}</td>
-                <td>
-                    {% if user.is_active %}
-                        <span class="btn-status-active">
-                            <i class="fas fa-check"></i>
-                            Активен
-                        </span>
-                    {% else %}
-                        <span class="btn-status-inactive">
-                            <i class="fas fa-times"></i>
-                            Неактивен
-                        </span>
-                    {% endif %}
-                </td>
                 <td class="table-cell-actions">
                     <button onclick='openEditModal({{ user | tojson | safe }})' class="btn-edit">
                         <i class="fas fa-edit"></i>

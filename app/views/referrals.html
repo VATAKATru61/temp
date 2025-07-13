@@ -6,16 +6,19 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Рефералы</h1>
+    <h1>
+        <i class="fas fa-user-friends"></i>
+        Рефералы
+    </h1>
     <p class="page-subtitle">Всего: {{ referrals|length }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="table-container">
-    <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-        <input type="text" id="referralSearchInput" placeholder="🔍 Поиск по ID, пригласителю, приглашённому..." style="flex:1;">
-        <button class="btn btn-sm btn-danger" id="delete-selected-referrals" style="white-space: nowrap;">Удалить выбранные</button>
+    <div class="search-container">
+        <input type="text" id="referralSearchInput" class="search-input" placeholder="🔍 Поиск по ID, пригласителю или приглашённому...">
+        <button class="btn btn-sm btn-danger" id="delete-selected-referrals">Удалить выбранные</button>
     </div>
     <table class="data-table" id="referralsTable">
         <thead>

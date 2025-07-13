@@ -21,7 +21,7 @@
     <div class="search-container">
         <input type="text" id="couponSearchInput" class="search-input" placeholder="🔍 Поиск по коду или скидке..." />
         <div style="display: flex; gap: 0.5rem;">
-            <button onclick="openCreateModal()" class="btn btn-sm">Создать купон</button>
+            <button onclick="openCreateModal()" class="btn btn-sm btn-success">Создать купон</button>
             <button class="btn btn-sm btn-danger" id="delete-selected-coupons">Удалить выбранные</button>
         </div>
     </div>
@@ -71,71 +71,127 @@
 
 <div class="modal" id="createModal">
     <div class="modal-content">
-        <h2>Создать купон</h2>
-        <form id="createCouponForm">
-            <div class="form-group"><label>Код:</label><input type="text" id="create-code" required></div>
-            <div class="form-group"><label>Тип:</label>
-                <select id="create-type">
-                    <option value="amount">Сумма</option>
-                    <option value="days">Дней</option>
-                </select>
-            </div>
-            <div class="form-group" id="create-amount-group">
-                <label>Сумма:</label><input type="number" id="create-amount" min="0" step="0.01">
-            </div>
-            <div class="form-group" id="create-days-group" style="display:none;">
-                <label>Дней:</label><input type="number" id="create-days" min="0">
-            </div>
-            <div class="form-group"><label>Лимит:</label><input type="number" id="create-usage_limit" min="1" value="1"></div>
-            <div class="form-group" style="display: none;">
-                <label>Ссылка:</label>
-                <input type="text" id="create-link">
-            </div>
-            <div class="form-buttons">
-                <button type="submit" class="btn btn-sm btn-primary">Создать</button>
-                <button type="button" onclick="closeCreateModal()" class="btn btn-sm btn-secondary">Отмена</button>
-            </div>
-        </form>
+        <div class="modal-header">
+            <h2>Создать купон</h2>
+            <button class="close" onclick="closeCreateModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="createCouponForm">
+                <div class="form-group">
+                    <label>Код купона:</label>
+                    <input type="text" id="create-code" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Тип купона:</label>
+                    <select id="create-type" class="form-control">
+                        <option value="amount">Сумма</option>
+                        <option value="days">Дней</option>
+                    </select>
+                </div>
+                <div class="form-group" id="create-amount-group">
+                    <label>Сумма (₽):</label>
+                    <input type="number" id="create-amount" class="form-control" min="0" step="0.01">
+                </div>
+                <div class="form-group" id="create-days-group" style="display:none;">
+                    <label>Количество дней:</label>
+                    <input type="number" id="create-days" class="form-control" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Лимит использований:</label>
+                    <input type="number" id="create-usage_limit" class="form-control" min="1" value="1">
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label>Ссылка:</label>
+                    <input type="text" id="create-link" class="form-control">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Создать
+                    </button>
+                    <button type="button" onclick="closeCreateModal()" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div class="modal" id="editModal">
     <div class="modal-content">
-        <h2>Редактировать купон</h2>
-        <form id="editCouponForm">
-            <input type="hidden" id="edit-original_code">
-            <input type="hidden" id="edit-id">
+        <div class="modal-header">
+            <h2>Редактировать купон</h2>
+            <button class="close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editCouponForm">
+                <input type="hidden" id="edit-original_code">
+                <input type="hidden" id="edit-id">
 
-            <div class="form-group"><label>Код:</label><input type="text" id="edit-code"></div>
-            <div class="form-group"><label>Тип:</label>
-                <select id="edit-type">
-                    <option value="amount">Сумма</option>
-                    <option value="days">Дней</option>
-                </select>
-            </div>
-            <div class="form-group" id="edit-amount-group">
-                <label>Сумма:</label><input type="number" id="edit-amount" min="0" step="0.01">
-            </div>
-            <div class="form-group" id="edit-days-group">
-                <label>Дней:</label><input type="number" id="edit-days" min="0">
-            </div>
-            <div class="form-group"><label>Лимит:</label><input type="number" id="edit-usage_limit" min="1"></div>
-            <div class="form-group"><label>Ссылка:</label><input type="text" id="edit-link"></div>
+                <div class="form-group">
+                    <label>Код купона:</label>
+                    <input type="text" id="edit-code" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Тип купона:</label>
+                    <select id="edit-type" class="form-control">
+                        <option value="amount">Сумма</option>
+                        <option value="days">Дней</option>
+                    </select>
+                </div>
+                <div class="form-group" id="edit-amount-group">
+                    <label>Сумма (₽):</label>
+                    <input type="number" id="edit-amount" class="form-control" min="0" step="0.01">
+                </div>
+                <div class="form-group" id="edit-days-group">
+                    <label>Количество дней:</label>
+                    <input type="number" id="edit-days" class="form-control" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Лимит использований:</label>
+                    <input type="number" id="edit-usage_limit" class="form-control" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Ссылка:</label>
+                    <input type="text" id="edit-link" class="form-control">
+                </div>
 
-            <div class="form-buttons">
-                <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
-                <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-secondary">Отмена</button>
-            </div>
-        </form>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Сохранить
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div class="modal" id="deleteModal">
     <div class="modal-content">
-        <p>Удалить купон <strong><span id="delete-coupon-id"></span></strong>?</p>
-        <div class="form-buttons">
-            <button onclick="confirmDelete()" class="btn btn-sm btn-danger">Да, удалить</button>
-            <button onclick="closeDeleteModal()" class="btn btn-sm btn-secondary">Отмена</button>
+        <div class="modal-header">
+            <h2>Подтверждение удаления</h2>
+            <button class="close" onclick="closeDeleteModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Вы уверены, что хотите удалить купон <strong><span id="delete-coupon-id"></span></strong>?</p>
+            <p class="text-muted">Это действие нельзя отменить.</p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="confirmDelete()" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+                Да, удалить
+            </button>
+            <button onclick="closeDeleteModal()" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Отмена
+            </button>
         </div>
     </div>
 </div>

@@ -88,79 +88,114 @@
 
 <div class="modal" id="createModal">
   <div class="modal-content">
-    <h2>Создать тариф</h2>
-    <form id="createTariffForm">
-      {% for field,label,type,attrs in [
-          ('name','Название','text','required'),
-          ('group_code','Группа','text',''),
-          ('subgroup_title','Подгруппа','text',''),
-          ('duration_days','Дней','number','min=0'),
-          ('traffic_limit','Трафик (ГБ)','number','min=0'),
-          ('device_limit','Устройства','number','min=0'),
-          ('price_rub','Цена (₽)','number','step=0.01 min=0'),
-          ('is_active','Включён','select','')
-      ] %}
-        <div class="form-group">
-          <label>{{ label }}:</label>
-          {% if field=='is_active' %}
-            <select id="create-{{field}}">
-              <option value="true">Да</option>
-              <option value="false">Нет</option>
-            </select>
-          {% else %}
-            <input id="create-{{field}}" type="{{ type }}" {{ attrs }}>
-          {% endif %}
+    <div class="modal-header">
+      <h2>Создать тариф</h2>
+      <button class="close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="createTariffForm">
+        {% for field,label,type,attrs in [
+            ('name','Название','text','required'),
+            ('group_code','Группа','text',''),
+            ('subgroup_title','Подгруппа','text',''),
+            ('duration_days','Дней','number','min=0'),
+            ('traffic_limit','Трафик (ГБ)','number','min=0'),
+            ('device_limit','Устройства','number','min=0'),
+            ('price_rub','Цена (₽)','number','step=0.01 min=0'),
+            ('is_active','Включён','select','')
+        ] %}
+          <div class="form-group">
+            <label>{{ label }}:</label>
+            {% if field=='is_active' %}
+              <select id="create-{{field}}" class="form-control">
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+              </select>
+            {% else %}
+              <input id="create-{{field}}" type="{{ type }}" class="form-control" {{ attrs }}>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Создать
+          </button>
+          <button type="button" onclick="closeCreateModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
         </div>
-      {% endfor %}
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-primary btn-sm">Создать</button>
-        <button type="button" onclick="closeCreateModal()" class="btn btn-secondary btn-sm">Отмена</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="editModal">
   <div class="modal-content">
-    <h2>Редактировать тариф</h2>
-    <form id="editTariffForm">
-      <input type="hidden" id="edit-name-original">
-      {% for field,label,type,attrs in [
-          ('name','Название','text','required'),
-          ('group_code','Группа','text',''),
-          ('subgroup_title','Подгруппа','text',''),
-          ('duration_days','Дней','number','min=0'),
-          ('traffic_limit','Трафик (ГБ)','number','min=0'),
-          ('device_limit','Устройства','number','min=0'),
-          ('price_rub','Цена (₽)','number','step=0.01 min=0'),
-          ('is_active','Включён','select','')
-      ] %}
-        <div class="form-group">
-          <label>{{ label }}:</label>
-          {% if field=='is_active' %}
-            <select id="edit-{{field}}">
-              <option value="true">Да</option>
-              <option value="false">Нет</option>
-            </select>
-          {% else %}
-            <input id="edit-{{field}}" type="{{ type }}" {{ attrs }}>
-          {% endif %}
+    <div class="modal-header">
+      <h2>Редактировать тариф</h2>
+      <button class="close" onclick="closeEditModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="editTariffForm">
+        <input type="hidden" id="edit-name-original">
+        {% for field,label,type,attrs in [
+            ('name','Название','text','required'),
+            ('group_code','Группа','text',''),
+            ('subgroup_title','Подгруппа','text',''),
+            ('duration_days','Дней','number','min=0'),
+            ('traffic_limit','Трафик (ГБ)','number','min=0'),
+            ('device_limit','Устройства','number','min=0'),
+            ('price_rub','Цена (₽)','number','step=0.01 min=0'),
+            ('is_active','Включён','select','')
+        ] %}
+          <div class="form-group">
+            <label>{{ label }}:</label>
+            {% if field=='is_active' %}
+              <select id="edit-{{field}}" class="form-control">
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+              </select>
+            {% else %}
+              <input id="edit-{{field}}" type="{{ type }}" class="form-control" {{ attrs }}>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Сохранить
+          </button>
+          <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Отмена
+          </button>
         </div>
-      {% endfor %}
-      <div class="form-buttons">
-        <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
-        <button type="button" onclick="closeEditModal()" class="btn btn-secondary btn-sm">Отмена</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="deleteModal">
   <div class="modal-content">
-    <p>Удалить тариф <strong><span id="delete-tariff-name"></span></strong>?</p>
-    <div class="form-buttons">
-      <button onclick="confirmDelete()" class="btn btn-danger btn-sm">Да, удалить</button>
-      <button onclick="closeDeleteModal()" class="btn btn-secondary btn-sm">Отмена</button>
+    <div class="modal-header">
+      <h2>Подтверждение удаления</h2>
+      <button class="close" onclick="closeDeleteModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Вы уверены, что хотите удалить тариф <strong><span id="delete-tariff-name"></span></strong>?</p>
+      <p class="text-muted">Это действие нельзя отменить.</p>
+    </div>
+    <div class="modal-footer">
+      <button onclick="confirmDelete()" class="btn btn-danger">
+        <i class="fas fa-trash"></i>
+        Да, удалить
+      </button>
+      <button onclick="closeDeleteModal()" class="btn btn-secondary">
+        <i class="fas fa-times"></i>
+        Отмена
+      </button>
     </div>
   </div>
 </div>
