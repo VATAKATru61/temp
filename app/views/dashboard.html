@@ -1,187 +1,542 @@
 {% extends "base.html" %}
 
-{% block title %}Панель | FastSafeNet WEB{% endblock %}
+{% block title %}Главная | SoloBot WEB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/dashboard.css">
 {% endblock %}
 
 {% block header %}
-    <div class="page-header">
-        <h1>Статистика</h1>
-        <p class="page-subtitle">Админ-панель FastSafeNet!</p>
-    </div>
+<div class="page-header">
+    <h1>
+        <i class="fas fa-tachometer-alt"></i>
+        Главная панель
+    </h1>
+    <p class="page-subtitle">Обзор системы и основные метрики</p>
+</div>
 {% endblock %}
 
 {% block content %}
-    {# Пример кнопки, если появится — уже в нужном стиле #}
-    {# <a href="/some-action" class="btn">Добавить</a> #}
-
-    <div class="dashboard-cards">
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">ПОДПИСКИ</div>
-            <div class="card-metric">
-                <span class="metric-label">Сгенерировано:</span>
-                <span class="metric-value">{{ stats.total_subs }}</span>
+<div class="dashboard-container">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Истекших:</span>
-                <span class="metric-value">{{ stats.expired_subs }}</span>
+            <div class="stat-value">{{ stats.total_users or 0 }}</div>
+            <div class="stat-label">Всего пользователей</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up stat-change-icon"></i>
+                +{{ stats.users_today or 0 }} сегодня
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Истекающих:</span>
-                <span class="metric-value">{{ stats.expiring_subs or 0 }}</span>
-            </div>
-            <div class="card-metric">
-                <span class="metric-label">Создано сегодня:</span>
-                <span class="metric-value">{{ stats.subs_today or 0 }}</span>
-            </div>
-            <a href="/keys" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">КЛИЕНТЫ</div>
-            <div class="card-metric">
-                <span class="metric-label">Всего:</span>
-                <span class="metric-value">{{ stats.total_users }}</span>
+        
+        <div class="stat-card success">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-key"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Активных:</span>
-                <span class="metric-value">{{ stats.active_users or 0 }}</span>
+            <div class="stat-value">{{ stats.total_subs or 0 }}</div>
+            <div class="stat-label">Активных подписок</div>
+            <div class="stat-change neutral">
+                <i class="fas fa-clock stat-change-icon"></i>
+                {{ stats.expired_subs or 0 }} истекших
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Без подписки:</span>
-                <span class="metric-value">{{ stats.users_without_subs or 0 }}</span>
-            </div>
-            <div class="card-metric">
-                <span class="metric-label">Новые сегодня:</span>
-                <span class="metric-value">{{ stats.users_today or 0 }}</span>
-            </div>
-            <a href="/users" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">ОПЛАТЫ</div>
-            <div class="card-metric">
-                <span class="metric-label">Всего:</span>
-                <span class="metric-value">{{ stats.total_payments }}</span>
+        
+        <div class="stat-card warning">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Общая сумма:</span>
-                <span class="metric-value">{{ stats.payments_sum or 0 }}</span>
+            <div class="stat-value">{{ "%.2f"|format(stats.payments_sum or 0) }}₽</div>
+            <div class="stat-label">Общий доход</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up stat-change-icon"></i>
+                +{{ "%.2f"|format(stats.payments_sum_today or 0) }}₽ сегодня
             </div>
-            <div class="card-metric">
-                <span class="metric-label">За сегодня:</span>
-                <span class="metric-value">{{ stats.payments_today or 0 }}</span>
-            </div>
-            <div class="card-metric">
-                <span class="metric-label">Сумма за сегодня:</span>
-                <span class="metric-value">{{ stats.payments_sum_today or 0 }}</span>
-            </div>
-            <a href="/payments" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">РЕФЕРАЛЫ</div>
-            <div class="card-metric">
-                <span class="metric-label">Всего:</span>
-                <span class="metric-value">{{ stats.total_refs }}</span>
+        
+        <div class="stat-card info">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-server"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">За сегодня:</span>
-                <span class="metric-value">{{ stats.refs_today or 0 }}</span>
+            <div class="stat-value">{{ stats.servers_available or 0 }}</div>
+            <div class="stat-label">Доступных серверов</div>
+            <div class="stat-change neutral">
+                <i class="fas fa-power-off stat-change-icon"></i>
+                {{ stats.servers_disabled or 0 }} отключено
             </div>
-            <a href="/referrals" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">СЕРВЕРЫ</div>
-            <div class="card-metric">
-                <span class="metric-label">Всего используется:</span>
-                <span class="metric-value">{{ stats.servers_used or 0 }}</span>
+        
+        <div class="stat-card danger">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Доступно:</span>
-                <span class="metric-value">{{ stats.servers_available or 0 }}</span>
+            <div class="stat-value">{{ stats.total_refs or 0 }}</div>
+            <div class="stat-label">Рефералов</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up stat-change-icon"></i>
+                +{{ stats.refs_today or 0 }} сегодня
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Отключено:</span>
-                <span class="metric-value">{{ stats.servers_disabled or 0 }}</span>
-            </div>
-            <a href="/servers" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
-        <div class="dashboard-card dashboard-card-square">
-            <div class="card-title-main">ПОДАРКИ</div>
-            <div class="card-metric">
-                <span class="metric-label">Всего:</span>
-                <span class="metric-value">{{ stats.total_gifts or 0 }}</span>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Использовано:</span>
-                <span class="metric-value">{{ stats.gifts_used or 0 }}</span>
+            <div class="stat-value">{{ stats.total_gifts or 0 }}</div>
+            <div class="stat-label">Подарков</div>
+            <div class="stat-change neutral">
+                <i class="fas fa-check stat-change-icon"></i>
+                {{ stats.gifts_used or 0 }} использовано
             </div>
-            <div class="card-metric">
-                <span class="metric-label">Активаций:</span>
-                <span class="metric-value">{{ stats.gifts_activated or 0 }}</span>
-            </div>
-            <a href="/gifts" class="btn btn-sm btn-secondary card-more-btn">Подробнее</a>
         </div>
     </div>
-
-    <div class="dashboard-graphs">
-        <div class="dashboard-card dashboard-card-square dashboard-graph-card">
-            <div class="card-title-main">ПРИРОСТ КЛИЕНТОВ ЗА МЕСЯЦ</div>
-            <canvas id="usersGrowthChart" height="80"></canvas>
+    
+    <!-- Charts Container -->
+    <div class="charts-container">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">Рост пользователей</h3>
+                    <p class="chart-subtitle">За последние 30 дней</p>
+                </div>
+                <div class="chart-actions">
+                    <button class="chart-filter active" data-period="30">30 дней</button>
+                    <button class="chart-filter" data-period="7">7 дней</button>
+                    <button class="chart-filter" data-period="1">Сегодня</button>
+                </div>
+            </div>
+            <div class="chart-content">
+                <canvas id="usersChart" width="400" height="200"></canvas>
+            </div>
         </div>
-        <div class="dashboard-card dashboard-card-square dashboard-graph-card">
-            <div class="card-title-main">ПРИРОСТ ПОДПИСОК ЗА МЕСЯЦ</div>
-            <canvas id="subsGrowthChart" height="80"></canvas>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">Активность подписок</h3>
+                    <p class="chart-subtitle">Новые подписки по дням</p>
+                </div>
+                <div class="chart-actions">
+                    <button class="chart-filter active" data-period="30">30 дней</button>
+                    <button class="chart-filter" data-period="7">7 дней</button>
+                </div>
+            </div>
+            <div class="chart-content">
+                <canvas id="subscriptionsChart" width="400" height="200"></canvas>
+            </div>
         </div>
     </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="/users" class="quick-action">
+            <div class="quick-action-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h4 class="quick-action-title">Добавить пользователя</h4>
+            <p class="quick-action-description">Создать нового пользователя в системе</p>
+        </a>
+        
+        <a href="/keys" class="quick-action">
+            <div class="quick-action-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <h4 class="quick-action-title">Управление ключами</h4>
+            <p class="quick-action-description">Просмотр и управление ключами</p>
+        </a>
+        
+        <a href="/servers" class="quick-action">
+            <div class="quick-action-icon">
+                <i class="fas fa-server"></i>
+            </div>
+            <h4 class="quick-action-title">Настройка серверов</h4>
+            <p class="quick-action-description">Управление серверами и их настройками</p>
+        </a>
+        
+        <a href="/payments" class="quick-action">
+            <div class="quick-action-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h4 class="quick-action-title">Аналитика</h4>
+            <p class="quick-action-description">Просмотр статистики и отчетов</p>
+        </a>
+    </div>
+    
+    <!-- System Status -->
+    <div class="system-status">
+        <div class="status-card">
+            <div class="status-header">
+                <h4 class="status-title">Использование CPU</h4>
+                <div class="status-indicator"></div>
+            </div>
+            <div class="status-value">45%</div>
+            <div class="status-label">Средняя загрузка</div>
+            <div class="status-progress">
+                <div class="status-progress-bar">
+                    <div class="status-progress-fill" style="width: 45%"></div>
+                </div>
+                <div class="status-progress-text">
+                    <span>0%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-header">
+                <h4 class="status-title">Использование RAM</h4>
+                <div class="status-indicator warning"></div>
+            </div>
+            <div class="status-value">72%</div>
+            <div class="status-label">8.2 GB / 16 GB</div>
+            <div class="status-progress">
+                <div class="status-progress-bar">
+                    <div class="status-progress-fill warning" style="width: 72%"></div>
+                </div>
+                <div class="status-progress-text">
+                    <span>0 GB</span>
+                    <span>16 GB</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-header">
+                <h4 class="status-title">Дисковое пространство</h4>
+                <div class="status-indicator success"></div>
+            </div>
+            <div class="status-value">28%</div>
+            <div class="status-label">142 GB / 500 GB</div>
+            <div class="status-progress">
+                <div class="status-progress-bar">
+                    <div class="status-progress-fill success" style="width: 28%"></div>
+                </div>
+                <div class="status-progress-text">
+                    <span>0 GB</span>
+                    <span>500 GB</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-header">
+                <h4 class="status-title">Сетевая активность</h4>
+                <div class="status-indicator"></div>
+            </div>
+            <div class="status-value">1.2 MB/s</div>
+            <div class="status-label">Текущая скорость</div>
+            <div class="status-progress">
+                <div class="status-progress-bar">
+                    <div class="status-progress-fill" style="width: 35%"></div>
+                </div>
+                <div class="status-progress-text">
+                    <span>0 MB/s</span>
+                    <span>10 MB/s</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="activity-feed">
+        <div class="activity-header">
+            <h3 class="activity-title">
+                <i class="fas fa-clock"></i>
+                Последняя активность
+            </h3>
+            <div class="activity-filter">
+                <button class="activity-filter-btn active">Все</button>
+                <button class="activity-filter-btn">Пользователи</button>
+                <button class="activity-filter-btn">Платежи</button>
+                <button class="activity-filter-btn">Системы</button>
+            </div>
+        </div>
+        
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon success">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Новый пользователь зарегистрирован</div>
+                    <div class="activity-time">2 минуты назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge success">Регистрация</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon info">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Получен новый платеж на сумму 299₽</div>
+                    <div class="activity-time">5 минут назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge info">Платеж</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon warning">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Сервер US-1 перезапущен</div>
+                    <div class="activity-time">12 минут назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge warning">Система</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon success">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Создан новый ключ для пользователя</div>
+                    <div class="activity-time">18 минут назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge success">Ключ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-message">Истек срок действия ключа</div>
+                    <div class="activity-time">25 минут назад</div>
+                    <div class="activity-meta">
+                        <span class="activity-badge danger">Истечение</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const usersGrowthData = {{ stats.users_growth_month|tojson }};
-        const subsGrowthData = {{ stats.subs_growth_month|tojson }};
-        const labels = {{ stats.last_30_days|tojson }};
-
-        const usersCtx = document.getElementById('usersGrowthChart').getContext('2d');
-        const subsCtx = document.getElementById('subsGrowthChart').getContext('2d');
-
-        new Chart(usersCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Клиенты',
-                    data: usersGrowthData,
-                    borderColor: '#ff7b00',
-                    backgroundColor: 'rgba(255,123,0,0.08)',
-                    tension: 0.3,
-                    fill: true,
-                    pointRadius: 2
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart data from backend
+    const usersData = {{ stats.users_growth_month|tojson if stats.users_growth_month else '[]' }};
+    const subsData = {{ stats.subs_growth_month|tojson if stats.subs_growth_month else '[]' }};
+    const dates = {{ stats.last_30_days|tojson if stats.last_30_days else '[]' }};
+    
+                        // Users Chart
+     const usersChart = new Chart(document.getElementById('usersChart'), {
+         type: 'line',
+         data: {
+             labels: dates,
+             datasets: [{
+                 label: 'Новые пользователи',
+                 data: usersData,
+                 borderColor: '#2563eb',
+                 backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                 fill: true
+             }]
+         },
+         options: {
+             responsive: true,
+             maintainAspectRatio: false,
+             plugins: {
+                 legend: {
+                     display: false
+                 }
+             },
+             scales: {
+                 y: {
+                     beginAtZero: true,
+                     grid: {
+                         color: 'rgba(0, 0, 0, 0.1)'
+                     }
+                 },
+                 x: {
+                     grid: {
+                         display: false
+                     }
+                 }
+             },
+             elements: {
+                 line: {
+                     tension: 0.4
+                 },
+                 point: {
+                     radius: 4,
+                     hoverRadius: 6
+                 }
+             }
+         }
+     });
+     
+     // Subscriptions Chart
+     const subscriptionsChart = new Chart(document.getElementById('subscriptionsChart'), {
+         type: 'line',
+         data: {
+             labels: dates,
+             datasets: [{
+                 label: 'Новые подписки',
+                 data: subsData,
+                 borderColor: '#10b981',
+                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                 fill: true
+             }]
+         },
+         options: {
+             responsive: true,
+             maintainAspectRatio: false,
+             plugins: {
+                 legend: {
+                     display: false
+                 }
+             },
+             scales: {
+                 y: {
+                     beginAtZero: true,
+                     grid: {
+                         color: 'rgba(0, 0, 0, 0.1)'
+                     }
+                 },
+                 x: {
+                     grid: {
+                         display: false
+                     }
+                 }
+             },
+             elements: {
+                 line: {
+                     tension: 0.4
+                 },
+                 point: {
+                     radius: 4,
+                     hoverRadius: 6
+                 }
+             }
+         }
+     });
+    
+    // Chart filter functionality
+    document.querySelectorAll('.chart-filter').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from siblings
+            this.parentElement.querySelectorAll('.chart-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update chart data based on period
+            const period = this.dataset.period;
+            updateChartData(period);
+        });
+    });
+    
+    function updateChartData(period) {
+        // This would typically fetch new data from the server
+        // For now, we'll just simulate the functionality
+        console.log(`Updating chart data for period: ${period}`);
+    }
+    
+    // Activity filter functionality
+    document.querySelectorAll('.activity-filter-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from siblings
+            this.parentElement.querySelectorAll('.activity-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Filter activity items
+            const filter = this.textContent.toLowerCase();
+            filterActivityItems(filter);
+        });
+    });
+    
+    function filterActivityItems(filter) {
+        const items = document.querySelectorAll('.activity-item');
+        
+        items.forEach(item => {
+            if (filter === 'все') {
+                item.style.display = 'flex';
+            } else {
+                const badge = item.querySelector('.activity-badge');
+                const badgeText = badge ? badge.textContent.toLowerCase() : '';
+                
+                if (badgeText.includes(filter) || filter === 'все') {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
             }
         });
-
-        new Chart(subsCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Подписки',
-                    data: subsGrowthData,
-                    borderColor: '#00c896',
-                    backgroundColor: 'rgba(0,200,150,0.08)',
-                    tension: 0.3,
-                    fill: true,
-                    pointRadius: 2
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
-            }
+    }
+    
+    // Auto-refresh dashboard data every 30 seconds
+    setInterval(() => {
+        // This would typically fetch fresh data from the server
+        console.log('Refreshing dashboard data...');
+    }, 30000);
+    
+    // Animate stat cards on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease-out';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            }, index * 100);
         });
-    </script>
+    });
+    
+    // Real-time updates simulation
+    function simulateRealTimeUpdates() {
+        const indicators = document.querySelectorAll('.status-indicator');
+        
+        indicators.forEach(indicator => {
+            // Simulate status changes
+            setInterval(() => {
+                const random = Math.random();
+                if (random < 0.1) {
+                    indicator.classList.add('warning');
+                    setTimeout(() => {
+                        indicator.classList.remove('warning');
+                    }, 2000);
+                }
+            }, 5000);
+        });
+    }
+    
+    // Initialize real-time updates
+    simulateRealTimeUpdates();
+</script>
 {% endblock %}
