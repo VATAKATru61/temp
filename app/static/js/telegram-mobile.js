@@ -532,7 +532,7 @@ class TelegramMobileApp {
         
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
+                // НЕ блокируем переход по ссылке!
                 
                 // Remove active class from all links
                 navLinks.forEach(l => l.classList.remove('active'));
@@ -540,17 +540,13 @@ class TelegramMobileApp {
                 // Add active class to clicked link
                 link.classList.add('active');
                 
-                // Navigate to page
-                const href = link.getAttribute('href');
-                if (href) {
-                    this.navigateToPage(href);
-                }
-                
                 // Close sidebar
                 const sidebar = document.querySelector('.sidebar');
                 if (sidebar) {
                     sidebar.classList.remove('open');
                 }
+                
+                // Позволяем браузеру обработать переход по ссылке
             });
         });
     }

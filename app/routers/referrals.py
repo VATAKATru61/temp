@@ -1,41 +1,56 @@
-from fastapi import FastAPI
 from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import httpx
-import os
-
-app = FastAPI()
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/views")
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000/api")
-ADMIN_TG_ID = os.getenv("ADMIN_TG_ID", "0")
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "your_admin_token")
-
-
-@router.get("/referrals")
-async def referrals_page(request: Request):
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.get(
-                f"{API_BASE_URL}/referrals/",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={"X-Token": ADMIN_TOKEN}
-            )
-            referrals = resp.json() if resp.status_code == 200 else []
-        except Exception as e:
-            print(f"[ERROR] referrals: {e}")
-            referrals = []
-    return templates.TemplateResponse(
-        "referrals.html",
+@router.get("/referrals", response_class=HTMLResponse)
+async def referrals_view(request: Request):
+    # Тестовые данные рефералов
+    referrals = [
         {
-            "request": request,
-            "referrals": referrals,
-            "tg_id": ADMIN_TG_ID,
-            "token": ADMIN_TOKEN
+            'id': 1,
+            'referrer_id': '123456789',
+            'referrer_username': 'ivan_petrov',
+            'referred_id': '987654321',
+            'referred_username': 'anna_sidorova',
+            'bonus_amount': 100.00,
+            'status': 'active',
+            'created_at': '2024-01-10 15:30:00',
+            'first_payment_at': '2024-01-11 10:15:00'
+        },
+        {
+            'id': 2,
+            'referrer_id': '555666777',
+            'referrer_username': 'sergey_kozlov',
+            'referred_id': '111222333',
+            'referred_username': 'maria_volkova',
+            'bonus_amount': 150.00,
+            'status': 'pending',
+            'created_at': '2024-01-12 12:00:00',
+            'first_payment_at': None
+        },
+        {
+            'id': 3,
+            'referrer_id': '123456789',
+            'referrer_username': 'ivan_petrov',
+            'referred_id': '444555666',
+            'referred_username': 'alex_petrov',
+            'bonus_amount': 200.00,
+            'status': 'active',
+            'created_at': '2024-01-08 09:30:00',
+            'first_payment_at': '2024-01-09 14:20:00'
         }
-    )
+    ]
+    
+    return templates.TemplateResponse("referrals.html", {
+        "request": request,
+        "referrals": referrals,
+        "total_referrals": len(referrals),
+        "active_referrals": sum(1 for r in referrals if r['status'] == 'active'),
+        "total_bonus": sum(r['bonus_amount'] for r in referrals if r['status'] == 'active')
+    })
 
 
 @router.delete("/referrals/one")

@@ -1,94 +1,83 @@
-from fastapi import APIRouter, Request, Body
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import httpx, os
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/views")
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000/api")
-ADMIN_TG_ID   = os.getenv("ADMIN_TG_ID", "0")
-ADMIN_TOKEN   = os.getenv("ADMIN_TOKEN", "your_admin_token")
-
-
 @router.get("/tariffs", response_class=HTMLResponse)
-async def tariffs_page(request: Request):
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.get(
-                f"{API_BASE_URL}/tariffs/",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                timeout=10
-            )
-            resp.raise_for_status()
-            tariffs = resp.json()
-        except Exception as e:
-            print(f"[ERROR] get tariffs: {e}")
-            tariffs = []
+async def tariffs_view(request: Request):
+    # Тестовые данные тарифов
+    tariffs = [
+        {
+            'id': 1,
+            'name': 'Базовый',
+            'description': 'Подходит для начинающих пользователей',
+            'price': 300.00,
+            'currency': 'RUB',
+            'duration_days': 30,
+            'traffic_limit': 50.0,
+            'servers_count': 3,
+            'max_devices': 2,
+            'is_active': True,
+            'is_popular': False,
+            'features': ['Базовая скорость', '3 сервера', 'Техподдержка']
+        },
+        {
+            'id': 2,
+            'name': 'Стандарт',
+            'description': 'Оптимальный выбор для большинства пользователей',
+            'price': 500.00,
+            'currency': 'RUB',
+            'duration_days': 30,
+            'traffic_limit': 100.0,
+            'servers_count': 6,
+            'max_devices': 5,
+            'is_active': True,
+            'is_popular': True,
+            'features': ['Высокая скорость', '6 серверов', 'Приоритетная поддержка']
+        },
+        {
+            'id': 3,
+            'name': 'Премиум',
+            'description': 'Максимальные возможности и скорость',
+            'price': 1000.00,
+            'currency': 'RUB',
+            'duration_days': 30,
+            'traffic_limit': 500.0,
+            'servers_count': 12,
+            'max_devices': 10,
+            'is_active': True,
+            'is_popular': False,
+            'features': ['Максимальная скорость', '12 серверов', 'VIP поддержка', 'Статический IP']
+        },
+        {
+            'id': 4,
+            'name': 'Эконом',
+            'description': 'Бюджетный вариант с ограниченным функционалом',
+            'price': 150.00,
+            'currency': 'RUB',
+            'duration_days': 30,
+            'traffic_limit': 20.0,
+            'servers_count': 2,
+            'max_devices': 1,
+            'is_active': False,
+            'is_popular': False,
+            'features': ['Базовая скорость', '2 сервера']
+        }
+    ]
+    
+    # Статистика
+    total_tariffs = len(tariffs)
+    active_tariffs = sum(1 for t in tariffs if t['is_active'])
+    inactive_tariffs = total_tariffs - active_tariffs
+    avg_price = sum(t['price'] for t in tariffs if t['is_active']) / active_tariffs if active_tariffs > 0 else 0
+    
     return templates.TemplateResponse("tariffs.html", {
         "request": request,
-        "tariffs": [
-            {**t, 'subgroup_title': t.get('subgroup_title') if t.get('subgroup_title') is not None else '—'}
-            for t in tariffs
-        ],
-        "total_tariffs": len(tariffs),
-        "tg_id": ADMIN_TG_ID,
-        "token": ADMIN_TOKEN,
+        "tariffs": tariffs,
+        "total_tariffs": total_tariffs,
+        "active_tariffs": active_tariffs,
+        "inactive_tariffs": inactive_tariffs,
+        "avg_price": round(avg_price, 2)
     })
-
-
-@router.post("/tariffs")
-async def create_tariff(data: dict = Body(...)):
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.post(
-                f"{API_BASE_URL}/tariffs/",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                json=data,
-                timeout=10
-            )
-            resp.raise_for_status()
-            return JSONResponse(status_code=201, content={"status": "created"})
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})
-
-
-@router.patch("/tariffs/{tariff_name}")
-async def patch_tariff(tariff_name: str, data: dict = Body(...)):
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.patch(
-                f"{API_BASE_URL}/tariffs/{tariff_name}",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                json=data,
-                timeout=10
-            )
-            resp.raise_for_status()
-            return JSONResponse(status_code=200, content={"status": "ok"})
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})
-
-
-@router.delete("/tariffs/{name}")
-async def delete_tariff(name: str):
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.delete(
-                f"{API_BASE_URL}/tariffs/{name}",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                timeout=10
-            )
-            resp.raise_for_status()
-            return JSONResponse(status_code=200, content={"status": "deleted"})
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})

@@ -1,182 +1,132 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import httpx
-import os
+from datetime import datetime, date
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/views")
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:3003/api")
-ADMIN_TG_ID = os.getenv("ADMIN_TG_ID", "0")
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "your_admin_token")
-
-
-def format_dt(dt):
-    if not dt:
-        return None
-    if isinstance(dt, str):
-        return dt
-    return dt.strftime("%d.%m.%Y %H:%M")
-
-
 @router.get("/users", response_class=HTMLResponse)
-async def users_page(request: Request):
-    users = []
-
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(
-                f"{API_BASE_URL}/users/",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={"X-Token": ADMIN_TOKEN},
-                timeout=10
-            )
-            response.raise_for_status()
-            users = response.json()
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить пользователей: {e}")
-
+async def users_view(request: Request):
+    # Тестовые данные пользователей
+    users = [
+        {
+            'id': 1,
+            'tg_id': '123456789',
+            'username': 'ivan_petrov',
+            'first_name': 'Иван',
+            'last_name': 'Петров',
+            'created_at': '2024-01-15 10:30:00',
+            'is_active': True,
+            'subscription_end': '2024-02-15 10:30:00'
+        },
+        {
+            'id': 2,
+            'tg_id': '987654321',
+            'username': 'anna_sidorova',
+            'first_name': 'Анна',
+            'last_name': 'Сидорова',
+            'created_at': '2024-01-14 15:20:00',
+            'is_active': False,
+            'subscription_end': None
+        },
+        {
+            'id': 3,
+            'tg_id': '555666777',
+            'username': 'sergey_kozlov',
+            'first_name': 'Сергей',
+            'last_name': 'Козлов',
+            'created_at': '2024-01-13 09:45:00',
+            'is_active': True,
+            'subscription_end': '2024-03-13 09:45:00'
+        },
+        {
+            'id': 4,
+            'tg_id': '111222333',
+            'username': 'maria_volkova',
+            'first_name': 'Мария',
+            'last_name': 'Волкова',
+            'created_at': '2024-01-12 14:15:00',
+            'is_active': True,
+            'subscription_end': '2024-01-20 14:15:00'
+        },
+        {
+            'id': 5,
+            'tg_id': '444555666',
+            'username': 'alex_petrov',
+            'first_name': 'Александр',
+            'last_name': 'Петров',
+            'created_at': '2024-01-10 11:00:00',
+            'is_active': False,
+            'subscription_end': None
+        }
+    ]
+    
     return templates.TemplateResponse("users.html", {
         "request": request,
-        "users": users,
-        "total_users": len(users),
-        "token": ADMIN_TOKEN,
-        "api_base_url": API_BASE_URL,
-        "admin_tg_id": ADMIN_TG_ID,
+        "users": users
     })
 
-
-@router.get("/users/{tg_id}", response_class=HTMLResponse)
-async def user_detail_page(request: Request, tg_id: int):
-    user = None
-    payments = []
-    subscriptions = []
-
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(
-                f"{API_BASE_URL}/users/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={"X-Token": ADMIN_TOKEN},
-                timeout=10
-            )
-            response.raise_for_status()
-            user = response.json()
-            user['created_at'] = format_dt(user.get('created_at'))
-            user['last_active'] = format_dt(user.get('updated_at'))
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить пользователя {tg_id}: {e}")
-
-        try:
-            payments_response = await client.get(
-                f"{API_BASE_URL}/payments/by_tg_id/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={
-                    "X-Token": ADMIN_TOKEN
-                },
-                timeout=10
-            )
-            payments_response.raise_for_status()
-            payments = payments_response.json() or []
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить платежи пользователя {tg_id}: {e}")
-
-        try:
-            subs_response = await client.get(
-                f"{API_BASE_URL}/keys/all/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={
-                    "X-Token": ADMIN_TOKEN
-                },
-                timeout=10
-            )
-            subs_response.raise_for_status()
-            subs_data = subs_response.json()
-            subscriptions = subs_data if subs_data else []
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить подписки пользователя {tg_id}: {e}")
-
-        gifts = []
-        try:
-            gifts_response = await client.get(
-                f"{API_BASE_URL}/gifts/by_tg_id/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={
-                    "X-Token": ADMIN_TOKEN
-                },
-                timeout=10
-            )
-            gifts_response.raise_for_status()
-            gifts_data = gifts_response.json()
-            gifts = gifts_data if gifts_data else []
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить подарки пользователя {tg_id}: {e}")
-
-        referrals = []
-        try:
-            referrals_response = await client.get(
-                f"{API_BASE_URL}/referrals/all/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={
-                    "X-Token": ADMIN_TOKEN
-                },
-                timeout=10
-            )
-            referrals_response.raise_for_status()
-            referrals_data = referrals_response.json()
-            referrals = referrals_data if referrals_data else []
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить рефералов пользователя {tg_id}: {e}")
-
-    if not user:
-        return HTMLResponse(content="Пользователь не найден", status_code=404)
-
+@router.get("/users/{user_id}", response_class=HTMLResponse)
+async def user_detail_view(request: Request, user_id: int):
+    # Тестовые данные для конкретного пользователя
+    user = {
+        'id': user_id,
+        'tg_id': '123456789',
+        'username': 'ivan_petrov',
+        'first_name': 'Иван',
+        'last_name': 'Петров',
+        'created_at': '2024-01-15 10:30:00',
+        'is_active': True,
+        'subscription_end': '2024-02-15 10:30:00',
+        'balance': 250.00,
+        'referral_count': 5,
+        'total_payments': 1500.00
+    }
+    
+    # Тестовые ключи пользователя
+    keys = [
+        {
+            'id': 1,
+            'name': 'Основной ключ',
+            'key': 'vless://test-key-1...',
+            'created_at': '2024-01-15 10:30:00',
+            'expiry_time': '2024-02-15 10:30:00',
+            'is_active': True
+        },
+        {
+            'id': 2,
+            'name': 'Дополнительный ключ',
+            'key': 'vless://test-key-2...',
+            'created_at': '2024-01-10 12:00:00',
+            'expiry_time': '2024-02-10 12:00:00',
+            'is_active': False
+        }
+    ]
+    
+    # Тестовые платежи пользователя
+    payments = [
+        {
+            'id': 1,
+            'amount': 500.00,
+            'currency': 'RUB',
+            'status': 'completed',
+            'created_at': '2024-01-15 10:30:00',
+            'description': 'Подписка на 1 месяц'
+        },
+        {
+            'id': 2,
+            'amount': 1000.00,
+            'currency': 'RUB',
+            'status': 'completed',
+            'created_at': '2024-01-05 14:20:00',
+            'description': 'Подписка на 2 месяца'
+        }
+    ]
+    
     return templates.TemplateResponse("user_detail.html", {
         "request": request,
         "user": user,
-        "payments": payments,
-        "subscriptions": subscriptions,
-        "referrals": referrals,
-        "gifts": gifts,
-        "token": ADMIN_TOKEN,
-        "api_base_url": API_BASE_URL,
-        "admin_tg_id": ADMIN_TG_ID,
+        "keys": keys,
+        "payments": payments
     })
-
-
-@router.patch("/users/{tg_id}")
-async def patch_user(tg_id: int, request: Request):
-    try:
-        payload = await request.json()
-        async with httpx.AsyncClient() as client:
-            response = await client.patch(
-                f"{API_BASE_URL}/users/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={
-                    "X-Token": ADMIN_TOKEN,
-                    "Content-Type": "application/json"
-                },
-                json=payload
-            )
-        response.raise_for_status()
-        return JSONResponse(content={"success": True})
-    except Exception as e:
-        print(f"[ERROR] Ошибка при обновлении пользователя {tg_id}: {e}")
-        return JSONResponse(status_code=500, content={"error": "Update failed"})
-
-
-@router.delete("/users/{tg_id}")
-async def delete_user(tg_id: int):
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.delete(
-                f"{API_BASE_URL}/users/{tg_id}",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={"X-Token": ADMIN_TOKEN}
-            )
-        response.raise_for_status()
-        return JSONResponse(content={"success": True})
-    except Exception as e:
-        print(f"[ERROR] Ошибка при удалении пользователя {tg_id}: {e}")
-        return JSONResponse(status_code=500, content={"error": "Delete failed"})

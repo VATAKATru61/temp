@@ -1,94 +1,75 @@
-from fastapi import APIRouter, Request, Body
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import httpx
-import os
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/views")
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000/api")
-ADMIN_TG_ID   = os.getenv("ADMIN_TG_ID", "0")
-ADMIN_TOKEN   = os.getenv("ADMIN_TOKEN", "your_admin_token")
-
 @router.get("/coupons", response_class=HTMLResponse)
-async def coupons_page(request: Request):
-    total_coupons = 0
-    coupons_data = []
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(
-                f"{API_BASE_URL}/coupons/",
-                params={"tg_id": ADMIN_TG_ID},
-                headers={"X-Token": ADMIN_TOKEN},
-                timeout=10
-            )
-            response.raise_for_status()
-            coupons_data = response.json()
-            total_coupons = len(coupons_data)
-        except Exception as e:
-            print(f"[ERROR] Не удалось получить купоны: {e}")
-
+async def coupons_view(request: Request):
+    # Тестовые данные купонов
+    coupons = [
+        {
+            'id': 1,
+            'code': 'WELCOME50',
+            'discount': 50,
+            'type': 'percent',
+            'description': 'Скидка 50% для новых пользователей',
+            'usage_count': 25,
+            'max_usage': 100,
+            'is_active': True,
+            'created_at': '2024-01-10 12:00:00',
+            'expires_at': '2024-02-10 23:59:59'
+        },
+        {
+            'id': 2,
+            'code': 'SAVE200',
+            'discount': 200,
+            'type': 'fixed',
+            'description': 'Фиксированная скидка 200 рублей',
+            'usage_count': 8,
+            'max_usage': 50,
+            'is_active': True,
+            'created_at': '2024-01-12 10:30:00',
+            'expires_at': '2024-03-12 23:59:59'
+        },
+        {
+            'id': 3,
+            'code': 'EXPIRED10',
+            'discount': 10,
+            'type': 'percent',
+            'description': 'Истёкший купон на 10%',
+            'usage_count': 100,
+            'max_usage': 100,
+            'is_active': False,
+            'created_at': '2024-01-01 00:00:00',
+            'expires_at': '2024-01-15 23:59:59'
+        },
+        {
+            'id': 4,
+            'code': 'VIP25',
+            'discount': 25,
+            'type': 'percent',
+            'description': 'VIP скидка 25% для премиум пользователей',
+            'usage_count': 5,
+            'max_usage': 20,
+            'is_active': True,
+            'created_at': '2024-01-14 15:00:00',
+            'expires_at': '2024-04-14 23:59:59'
+        }
+    ]
+    
+    # Статистика
+    total_coupons = len(coupons)
+    active_coupons = sum(1 for c in coupons if c['is_active'])
+    inactive_coupons = total_coupons - active_coupons
+    total_usage = sum(c['usage_count'] for c in coupons)
+    
     return templates.TemplateResponse("coupons.html", {
         "request": request,
-        "coupons": coupons_data,
+        "coupons": coupons,
         "total_coupons": total_coupons,
-        "token": ADMIN_TOKEN,
-        "tg_id": ADMIN_TG_ID,
+        "active_coupons": active_coupons,
+        "inactive_coupons": inactive_coupons,
+        "total_usage": total_usage
     })
-
-@router.post("/coupons")
-async def create_coupon(data: dict = Body(...)):
-
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(
-                f"{API_BASE_URL}/coupons/",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                json=data,
-                timeout=10
-            )
-            response.raise_for_status()
-            created = response.json()
-            return JSONResponse(status_code=200, content=created)
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(status_code=e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})
-
-@router.patch("/coupons/{code}")
-async def patch_coupon(code: str, data: dict = Body(...)):
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.patch(
-                f"{API_BASE_URL}/coupons/{code}",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                json=data,
-                timeout=10
-            )
-            response.raise_for_status()
-            updated = response.json()
-            return JSONResponse(status_code=200, content=updated)
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(status_code=e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})
-
-@router.delete("/coupons/{code}")
-async def delete_coupon(code: str):
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.delete(
-                f"{API_BASE_URL}/coupons/{code}",
-                headers={"X-Token": ADMIN_TOKEN},
-                params={"tg_id": ADMIN_TG_ID},
-                timeout=10
-            )
-            response.raise_for_status()
-            return JSONResponse(status_code=200, content={"status": "deleted"})
-        except httpx.HTTPStatusError as e:
-            return JSONResponse(status_code=e.response.status_code, content={"error": e.response.text})
-        except Exception as e:
-            return JSONResponse(status_code=500, content={"error": str(e)})
