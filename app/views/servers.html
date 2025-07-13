@@ -8,15 +8,18 @@
 
 {% block header %}
 <div class="page-header">
-  <h1>Серверы</h1>
-  <p class="page-subtitle">Всего: {{ total_servers }}</p>
+    <h1>
+        <i class="fas fa-server"></i>
+        Серверы
+    </h1>
+    <p class="page-subtitle">Всего: {{ total_servers }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="table-container">
-  <div class="search-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-    <input type="text" id="serverSearchInput" placeholder="🔍 Поиск по имени, кластеру или URL..." />
+  <div class="search-container">
+    <input type="text" id="serverSearchInput" class="search-input" placeholder="🔍 Поиск по имени, кластеру или URL..." />
     <button onclick="openCreateModal()" class="btn btn-sm">Создать сервер</button>
   </div>
 

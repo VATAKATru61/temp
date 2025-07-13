@@ -141,199 +141,11 @@
         </div>
     </div>
     
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <a href="/users" class="quick-action">
-            <div class="quick-action-icon">
-                <i class="fas fa-user-plus"></i>
-            </div>
-            <h4 class="quick-action-title">Добавить пользователя</h4>
-            <p class="quick-action-description">Создать нового пользователя в системе</p>
-        </a>
-        
-        <a href="/keys" class="quick-action">
-            <div class="quick-action-icon">
-                <i class="fas fa-key"></i>
-            </div>
-            <h4 class="quick-action-title">Управление ключами</h4>
-            <p class="quick-action-description">Просмотр и управление ключами</p>
-        </a>
-        
-        <a href="/servers" class="quick-action">
-            <div class="quick-action-icon">
-                <i class="fas fa-server"></i>
-            </div>
-            <h4 class="quick-action-title">Настройка серверов</h4>
-            <p class="quick-action-description">Управление серверами и их настройками</p>
-        </a>
-        
-        <a href="/payments" class="quick-action">
-            <div class="quick-action-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <h4 class="quick-action-title">Аналитика</h4>
-            <p class="quick-action-description">Просмотр статистики и отчетов</p>
-        </a>
-    </div>
+
     
-    <!-- System Status -->
-    <div class="system-status">
-        <div class="status-card">
-            <div class="status-header">
-                <h4 class="status-title">Использование CPU</h4>
-                <div class="status-indicator"></div>
-            </div>
-            <div class="status-value">45%</div>
-            <div class="status-label">Средняя загрузка</div>
-            <div class="status-progress">
-                <div class="status-progress-bar">
-                    <div class="status-progress-fill" style="width: 45%"></div>
-                </div>
-                <div class="status-progress-text">
-                    <span>0%</span>
-                    <span>100%</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="status-card">
-            <div class="status-header">
-                <h4 class="status-title">Использование RAM</h4>
-                <div class="status-indicator warning"></div>
-            </div>
-            <div class="status-value">72%</div>
-            <div class="status-label">8.2 GB / 16 GB</div>
-            <div class="status-progress">
-                <div class="status-progress-bar">
-                    <div class="status-progress-fill warning" style="width: 72%"></div>
-                </div>
-                <div class="status-progress-text">
-                    <span>0 GB</span>
-                    <span>16 GB</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="status-card">
-            <div class="status-header">
-                <h4 class="status-title">Дисковое пространство</h4>
-                <div class="status-indicator success"></div>
-            </div>
-            <div class="status-value">28%</div>
-            <div class="status-label">142 GB / 500 GB</div>
-            <div class="status-progress">
-                <div class="status-progress-bar">
-                    <div class="status-progress-fill success" style="width: 28%"></div>
-                </div>
-                <div class="status-progress-text">
-                    <span>0 GB</span>
-                    <span>500 GB</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="status-card">
-            <div class="status-header">
-                <h4 class="status-title">Сетевая активность</h4>
-                <div class="status-indicator"></div>
-            </div>
-            <div class="status-value">1.2 MB/s</div>
-            <div class="status-label">Текущая скорость</div>
-            <div class="status-progress">
-                <div class="status-progress-bar">
-                    <div class="status-progress-fill" style="width: 35%"></div>
-                </div>
-                <div class="status-progress-text">
-                    <span>0 MB/s</span>
-                    <span>10 MB/s</span>
-                </div>
-            </div>
-        </div>
-    </div>
+
     
-    <!-- Recent Activity -->
-    <div class="activity-feed">
-        <div class="activity-header">
-            <h3 class="activity-title">
-                <i class="fas fa-clock"></i>
-                Последняя активность
-            </h3>
-            <div class="activity-filter">
-                <button class="activity-filter-btn active">Все</button>
-                <button class="activity-filter-btn">Пользователи</button>
-                <button class="activity-filter-btn">Платежи</button>
-                <button class="activity-filter-btn">Системы</button>
-            </div>
-        </div>
-        
-        <div class="activity-list" id="activityList">
-            <!-- Активность будет загружена динамически -->
-            <div class="activity-item">
-                <div class="activity-icon success">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Пользователь ID:12345 зарегистрировался</div>
-                    <div class="activity-time">Только что</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge success">Пользователи</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon info">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Платеж 299₽ от пользователя @username</div>
-                    <div class="activity-time">3 минуты назад</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge info">Платежи</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon success">
-                    <i class="fas fa-key"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Создан ключ для пользователя ID:12340</div>
-                    <div class="activity-time">15 минут назад</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge success">Ключи</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon warning">
-                    <i class="fas fa-server"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Сервер EU-2 превысил лимит подключений</div>
-                    <div class="activity-time">1 час назад</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge warning">Системы</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon danger">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-message">Истек ключ пользователя ID:12300</div>
-                    <div class="activity-time">2 часа назад</div>
-                    <div class="activity-meta">
-                        <span class="activity-badge danger">Истечения</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 {% endblock %}
 
@@ -445,46 +257,13 @@
                 btn.classList.remove('active');
             });
             
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Update chart data based on period
-            const period = this.dataset.period;
-            updateChartData(period);
-        });
+                    // Remove active class from all buttons
+        document.querySelectorAll('.chart-filter-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        this.classList.add('active');
     });
-    
-                   function updateChartData(period) {
-         // Симуляция данных для разных периодов
-         let newUsersData, newSubsData, newLabels;
-         
-         if (period === '1') {
-             // Данные за сегодня (по часам)
-             newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
-             newUsersData = [2, 5, 8, 12, 15, 18];
-             newSubsData = [1, 3, 5, 7, 9, 11];
-         } else if (period === '7') {
-             // Данные за 7 дней
-             newLabels = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-             newUsersData = [25, 30, 28, 35, 40, 45, 38];
-             newSubsData = [15, 18, 16, 22, 25, 28, 24];
-         } else {
-             // Данные за 30 дней (исходные)
-             newLabels = dates;
-             newUsersData = usersData;
-             newSubsData = subsData;
-         }
-         
-         // Обновляем график пользователей
-         usersChart.data.labels = newLabels;
-         usersChart.data.datasets[0].data = newUsersData;
-         usersChart.update();
-         
-         // Обновляем график подписок
-         subscriptionsChart.data.labels = newLabels;
-         subscriptionsChart.data.datasets[0].data = newSubsData;
-         subscriptionsChart.update();
-     }
+});
     
     // Activity filter functionality
     document.querySelectorAll('.activity-filter-btn').forEach(button => {

@@ -7,23 +7,37 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Тарифы</h1>
+    <h1>
+        <i class="fas fa-tags"></i>
+        Тарифы
+    </h1>
     <p class="page-subtitle">Всего: {{ total_tariffs }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="table-container">
-    <div class="search-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <input type="text" id="tariffSearchInput" placeholder="🔍 Поиск..." />
+    <div class="search-container">
+        <input type="text" id="tariffSearchInput" class="search-input" placeholder="🔍 Поиск по названию, цене или группе..." />
         <button onclick="openCreateModal()" class="btn btn-primary btn-sm">Создать тариф</button>
     </div>
 
     {% for group, group_items in tariffs|groupby('group_code') %}
     <div class="tariff-group">
-        <h2>Группа: {{ group }}</h2>
+        <div class="group-header">
+            <div class="group-title">
+                <i class="fas fa-layer-group"></i>
+                <span class="group-name">{{ group }}</span>
+                <span class="group-badge">{{ group_items|list|length }} тарифов</span>
+            </div>
+        </div>
         {% for subgroup, items in group_items|groupby('subgroup_title') %}
-        <h3>{{ subgroup or 'Основная' }}</h3>
+        <div class="subgroup-header">
+            <h3 class="subgroup-title">
+                <i class="fas fa-tag"></i>
+                {{ subgroup if subgroup and subgroup != group else 'Основная группа' }}
+            </h3>
+        </div>
         <table class="data-table">
             <thead>
                 <tr>

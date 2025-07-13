@@ -8,18 +8,21 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Купоны</h1>
+    <h1>
+        <i class="fas fa-ticket-alt"></i>
+        Купоны
+    </h1>
     <p class="page-subtitle">Всего: {{ total_coupons }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="table-container">
-    <div class="search-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <input type="text" id="couponSearchInput" placeholder="🔍 Поиск по коду..." style="flex:1;">
+    <div class="search-container">
+        <input type="text" id="couponSearchInput" class="search-input" placeholder="🔍 Поиск по коду или скидке..." />
         <div style="display: flex; gap: 0.5rem;">
             <button onclick="openCreateModal()" class="btn btn-sm">Создать купон</button>
-            <button class="btn btn-sm btn-danger" id="delete-selected-coupons" style="white-space: nowrap;">Удалить выбранные</button>
+            <button class="btn btn-sm btn-danger" id="delete-selected-coupons">Удалить выбранные</button>
         </div>
     </div>
 

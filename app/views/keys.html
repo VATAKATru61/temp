@@ -8,16 +8,19 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Подписки</h1>
+    <h1>
+        <i class="fas fa-key"></i>
+        Подписки
+    </h1>
     <p class="page-subtitle">Всего: {{ total_keys }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="table-container">
-    <div class="search-container" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-        <input type="text" id="keySearchInput" placeholder="🔍 Поиск по email или uuid..." style="flex:1;">
-        <button class="btn btn-sm btn-danger" id="delete-selected-keys" style="white-space: nowrap;">Удалить выбранные</button>
+    <div class="search-container">
+        <input type="text" id="keySearchInput" class="search-input" placeholder="🔍 Поиск по email, UUID или tg_id..." />
+        <button class="btn btn-sm btn-danger" id="delete-selected-keys">Удалить выбранные</button>
     </div>
 
     <table class="data-table">
