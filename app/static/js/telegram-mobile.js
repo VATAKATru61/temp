@@ -908,6 +908,39 @@ class TelegramMobileApp {
     }
 }
 
+// КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Глобальная функция для кнопки меню
+function toggleMobileMenuSimple() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+        
+        // Добавляем вибрацию для лучшего UX
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+    }
+    console.log('Menu toggled!'); // Для отладки
+}
+
+// Дополнительная инициализация кнопки меню для надежности
+document.addEventListener('DOMContentLoaded', function() {
+    const menuButton = document.getElementById('mobileMenuToggle');
+    if (menuButton) {
+        // Множественные обработчики для максимальной надежности
+        menuButton.addEventListener('click', toggleMobileMenuSimple);
+        menuButton.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            toggleMobileMenuSimple();
+        });
+        
+        // Убираем любые конфликтующие стили
+        menuButton.style.pointerEvents = 'auto';
+        menuButton.style.zIndex = '10000';
+        
+        console.log('Menu button initialized successfully!');
+    }
+});
+
 // Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.telegramMobileApp = new TelegramMobileApp();

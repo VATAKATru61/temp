@@ -364,6 +364,11 @@
             cursor: pointer;
             padding: 0.5rem;
             margin-bottom: 1rem;
+            /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: добавляем z-index и pointer-events */
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            touch-action: manipulation !important;
+            position: relative !important;
         }
         
         .toast-container {
@@ -491,7 +496,29 @@
         
         @media (max-width: 768px) {
             .mobile-menu-toggle {
-                display: block;
+                display: block !important;
+                /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: убираем все конфликтующие стили */
+                position: fixed !important;
+                top: 1rem !important;
+                right: 1rem !important;
+                z-index: 99999 !important;
+                background: white !important;
+                border: 2px solid #007bff !important;
+                border-radius: 8px !important;
+                width: 56px !important;
+                height: 56px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+                pointer-events: auto !important;
+                touch-action: manipulation !important;
+            }
+            
+            .mobile-menu-toggle:hover,
+            .mobile-menu-toggle:active {
+                background: #007bff !important;
+                color: white !important;
             }
             
             .toast-container {
